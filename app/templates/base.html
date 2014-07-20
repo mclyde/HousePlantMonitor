@@ -1,0 +1,18 @@
+<html>
+  <head>
+  	{% if title %}
+      <title>Home Plant Monitor - {{title}}</title>
+    {% else %}
+      <title>Home Plant Monitor</title>
+    {% endif %}
+  </head>
+
+  <body>
+    <div>
+      <a href="/index">HOME</a>
+    </div>
+    <hr>
+    {% block content %}
+    {% endblock %}
+  </body>
+</html>

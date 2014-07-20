@@ -1,19 +1,9 @@
-
-<html>
-  <head>
-  	{% if title %}
-      <title>{{title}} - Demo App</title>
-    {% else %}
-      <title>Demo App</title>
-    {% endif %}
-  </head>
-
-  <body>
-    <h1>Home Plant Monitoring System</h1>
-    {% for device in devices %}
-      <p>Device name: {{device.name}}</p>
-      <p>Device pins: {% for elem in device.pins %}{{elem}} {% endfor %}</p>
-      <p>Device state: {{device.active}}</p>
-    {% endfor %}
-  </body>
-</html>
+{% extends "base.html" %}
+{% block content %}
+    <h1>Index</h1>
+    <div>
+    	<p><a href='/config'>Configure Sensors</a></p>
+    	<p><a href='/email'>Communication Settings</a></p>
+    	<p><a href='/readings'>Display Current Readings</a></p>
+    </div>
+{% endblock %}
