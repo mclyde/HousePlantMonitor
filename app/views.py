@@ -1,6 +1,9 @@
 from app import app
 from flask import render_template, flash, url_for, redirect, Response
-import arduinoreaddemo
+import ard
+
+#def main(argv):
+
 
 @app.route('/')
 @app.route('/index')
@@ -23,6 +26,6 @@ def email():
 
 @app.route('/readings')
 def readings():
-
-	return render_template("readings.html", title = 'Current Readings')
+	temp = None ard.tempRead()
+	return render_template("readings.html", title = 'Current Readings', temp = temp)
 
