@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+    {% for troop in troops %}
+    <p>{{troop.name}}<br>
+        {% for scout in troop.scouts %}        
+        <p><li>{{scout.name}}</li></p>
+        {% endfor %}
+    </br></p>
+    {% endfor %}
+{% endblock %}

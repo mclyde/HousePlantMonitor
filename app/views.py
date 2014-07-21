@@ -1,6 +1,8 @@
 from app import app
+from app.Pynoccio import pynoccio
 from flask import render_template, flash, url_for, redirect, Response
-import arduinoreaddemo
+import email
+#import arduinoreaddemo
 
 @app.route('/')
 @app.route('/index')
@@ -26,3 +28,12 @@ def readings():
 
 	return render_template("readings.html", title = 'Current Readings')
 
+
+@app.route('/show_scouts/')
+def show_scouts():
+    account = pynoccio.Account()
+    account.token = app.config['SECURITY_TOKEN']
+
+    account.load_troops()
+
+    return render_template('scouts.html', title = 'Scouts Connected', troops = account.troops)
