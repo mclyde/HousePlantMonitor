@@ -1,5 +1,17 @@
-{% extends "base.html" %}
+{% extends "bootstrap/base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% import "bootstrap/fixes.html" as fixes %}
+
+{% block title %}House Plant Monitor{% endblock %}
+
+{% block navbar %}
+<div class="navbar navbar-fixed-top">{% include "nav.html" %}</div>
+{% endblock %}
+
 {% block content %}
+<div class="jumbotron">
+	<div class="container">
+        <h1>{{title}}</h1>
 	{% for device in presets %}
 		{% if device.name == 'temp' %}
 			<p>Temperature Sensor</p>
@@ -11,4 +23,11 @@
 			<p>Leaf Color Gauge</p>
 		{% endif %}
 	{% endfor %}
+</div>
+</div>
+{% endblock %}
+
+{% block head %}
+{{super()}}
+{{fixes.ie8()}}
 {% endblock %}

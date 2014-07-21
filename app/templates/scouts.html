@@ -1,10 +1,28 @@
-{% extends "base.html" %}
+{% extends "bootstrap/base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% import "bootstrap/fixes.html" as fixes %}
+
+{% block title %}House Plant Monitor{% endblock %}
+
+{% block navbar %}
+<div class="navbar navbar-fixed-top">{% include "nav.html" %}</div>
+{% endblock %}
+
 {% block content %}
-    {% for troop in troops %}
-    <p>{{troop.name}}<br>
-        {% for scout in troop.scouts %}        
-        <p><li>{{scout.name}}</li></p>
+<div class="jumbotron">
+    <div class="container">
+        <h1>{{title}}</h1>
+        {% for troop in troops %}
+        <h2>{{troop.name}}<h2>
+            {% for scout in troop.scouts %}        
+            <h3><li>{{scout.name}}</li></h3>
+            {% endfor %}
         {% endfor %}
-    </br></p>
-    {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+{% block head %}
+{{super()}}
+{{fixes.ie8()}}
 {% endblock %}

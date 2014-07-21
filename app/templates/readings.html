@@ -1,4 +1,22 @@
-{% extends "base.html" %}
-{% block content %}
+{% extends "bootstrap/base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% import "bootstrap/fixes.html" as fixes %}
 
+{% block title %}House Plant Monitor{% endblock %}
+
+{% block navbar %}
+<div class="navbar navbar-fixed-top">{% include "nav.html" %}</div>
+{% endblock %}
+
+{% block content %}
+<div class="jumbotron">
+    <div class="container">
+        <h1>{{title}}</h1>
+    </div>
+</div>
+{% endblock %}
+
+{% block head %}
+{{super()}}
+{{fixes.ie8()}}
 {% endblock %}
