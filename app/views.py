@@ -1,13 +1,15 @@
 from app import app
 from app.Pynoccio import pynoccio
 from flask import render_template, flash, url_for, redirect, Response
+from flask_bootstrap import Bootstrap
+import forms
 import email
 #import arduinoreaddemo
 
 @app.route('/')
 @app.route('/index')
 def index():
-	return render_template("index.html", title = 'Index')
+    return render_template("index.html", title = 'Index')
 
 @app.route('/config')
 def config():
@@ -20,8 +22,9 @@ def config():
 
 @app.route('/email')
 def email():
-
-	return render_template("email.html", title = 'Communication Settings')
+     form = forms.CommunicationsForm()
+     form.validate_on_submit()
+     return render_template("email.html", title = 'Communication Settings', form=form)
 
 @app.route('/readings')
 def readings():
