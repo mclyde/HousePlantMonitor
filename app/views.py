@@ -4,7 +4,7 @@ from flask import render_template, flash, url_for, redirect, Response
 from flask_bootstrap import Bootstrap
 import forms
 import email
-#import arduinoreaddemo
+import ard
 
 @app.route('/')
 @app.route('/index')
@@ -28,8 +28,8 @@ def email():
 
 @app.route('/readings')
 def readings():
-
-	return render_template("readings.html", title = 'Current Readings')
+	temp = None ard.tempRead()
+	return render_template("readings.html", title = 'Current Readings', temp = temp)
 
 
 @app.route('/show_scouts/')
