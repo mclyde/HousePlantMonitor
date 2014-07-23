@@ -1,0 +1,5 @@
+PINOCCIO_API = 'https://api.pinocc.io/v1/'
+
+SECURITY_TOKEN = 'YOUR PINOCC.IO API SECURITY TOKEN HERE' 
+
+SECRET_KEY = 'mySecretKey'
