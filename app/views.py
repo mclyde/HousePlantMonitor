@@ -28,7 +28,7 @@ def email():
 
 @app.route('/readings')
 def readings():
-	temp = None ard.tempRead()
+	temp = None
 	return render_template("readings.html", title = 'Current Readings', temp = temp)
 
 
