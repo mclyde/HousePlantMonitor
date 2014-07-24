@@ -1,0 +1,11 @@
+{{recipient.name}}--AKA Bastard Plant Killer,
+
+Scout {{sensor.scout}} has a wonky reading! 
+
+{{sensor.reply}}
+
+DO SOMETHING ABOUT IT!! Don't let your plants DIE!!
+
+Regards,
+
+Your friendly House Plant Monitor
