@@ -1,0 +1,9 @@
+From: House Plant Monitor
+To: {{recipient}}
+Subject: Scout Notification
+
+Scout {{sensor.scout}} has a wonky reading!
+DO SOMETHING ABOUT IT!! Don't let your plants DIE!!
+
+Regards,
+Your friendly House Plant Monitor
