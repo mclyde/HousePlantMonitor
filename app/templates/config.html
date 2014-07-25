@@ -12,18 +12,13 @@
 <div class="jumbotron">
 	<div class="container">
         <h1>{{title}}</h1>
-	{% for device in presets %}
-		{% if device.name == 'temp' %}
-			<p>Temperature Sensor</p>
-		{% elif device.name == 'light'%}
-			<p>Photometer</p>
-		{% elif device.name == 'soil' %}
-			<p>Soil Moisture Gauge</p>
-		{% elif device.name == 'color' %}
-			<p>Leaf Color Gauge</p>
-		{% endif %}
-	{% endfor %}
-</div>
+		{% for troop in troops %}
+			<h2>{{troop.name}}</h2>
+			{% for scout in troop.scouts %}
+				<h3>{{scout.name}}</h3>
+			{% endfor %}
+		{% endfor %}
+	</div>
 </div>
 {% endblock %}
 
