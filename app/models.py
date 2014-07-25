@@ -6,6 +6,7 @@ class Device(db.Model):
 	troop = db.Column(db.Integer, index = True)		# The troop id # (from Pinnocc.io HQ)
 	scout = db.Column(db.Integer, index = True)		# The scout id # (from Pinnocc.io HQ) that the device is connected to
 	type = db.Column(db.Text, index = True)			# e.g. soil, temp, light, etc.
+	mode = db.Column(db.Integer)					# -1 DISABLED 0 INPUT, 1 OUTPUT, 2 INPUT_PULLUP
 	pin = db.Column(db.String(2))					# e.g. D2, A4, etc.
 	digital = db.Column(db.Boolean)					# 0 false 1 true
 	dtrigger = db.Column(db.String(4))				# HIGH or LOW
@@ -15,7 +16,7 @@ class Device(db.Model):
 	text = db.Column(db.Boolean)					# 0 false 1 true
 	email = db.Column(db.Boolean)
 	tweet = db.Column(db.Boolean)
-	motor = db.relationship('Device')				# link to an id of the Device table because a motor is just another device
+	motor = db.relationship('Motor', backref = 'owner') # id of Motor
 
 	def __repr__(self):
 		return '<Device %r>' % (self.name)
@@ -30,3 +31,32 @@ class Communication(db.Model):
 
     def __repr__(self):
         return '<Communication %r>' % (self.name)
+
+class Motor(db.Model):
+	id = db.Column(db.Integer, primary_key = True)
+	name = db.Column(db.String(64))
+	scout = db.Column(db.Integer, index = True)
+	troop = db.Column(db.Integer, index = True)	
+	type = db.Column(db.Text, index = True)
+	trig_time = db.Column(db.Integer)				# milliseconds
+	untrig_time = db.Column(db.Integer)				# milliseconds
+	delay = db.Column(db.Integer)					# seconds
+	state = db.Column(db.Boolean)					# 0 = last untrig 1 = last trig
+	device_id = db.Column(db.Integer, db.ForeignKey('device.id'))
+
+	def __repr__(self):
+		return '<Motor %r>' % (self.name)
+
+class Soil():
+	type = 'soil'
+
+	def __init__(self, name, pin, troop, scout, mode):
+		self.name = name
+		self.pin = pin
+		self.troop = troop
+		self.scout = scout
+		self.mode
+
+
+
+

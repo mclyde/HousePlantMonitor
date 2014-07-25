@@ -1,12 +1,13 @@
-from app import app, db
+from app import app, db, models
 from app.Pynoccio import pynoccio
 from flask import render_template, flash, url_for, redirect, Response, request, g, session
 from flask_bootstrap import Bootstrap
 from twitter import *
 from forms import CommunicationsForm, TelephoneForm
-from models import Communication
+from models import *
 import emails
 import texts
+import sqlite3
 
 #To send a tweet
 # from twitter import *
@@ -25,33 +26,42 @@ def config():
 	account.token = app.config['SECURITY_TOKEN']
 	account.load_troops()
 
-	pins = {'D2':-3,'D3':-3,'D4':-3,'D5':-3,'D6':-3,'D7':-3,'D8':-3
-		,'A0':-3,'A1':-3,'A2':-3,'A3':-3,'A4':-3,'A5':-3,'A6':-3,'A7':-3}
+	devices = models.Device.query.all()
+	motors = models.Motor.query.all()
+
 	troopPins = {}
 	scoutPins = {}
+	pins = {}
 	for troop in account.troops:
 		for scout in troop.scouts:
 			pinDModes = pynoccio.PinCmd(scout).report.digital.reply.mode	# get array of ints
 			pinAModes = pynoccio.PinCmd(scout).report.analog.reply.mode
-			pins['D2'] = pinDModes[0]
-			pins['D3'] = pinDModes[1]
-			pins['D4'] = pinDModes[2]
-			pins['D5'] = pinDModes[3]
-			pins['D6'] = pinDModes[4]
-			pins['D7'] = pinDModes[5]
-			pins['D8'] = pinDModes[6]
-			pins['A0'] = pinAModes[0]
-			pins['A1'] = pinAModes[1]
-			pins['A2'] = pinAModes[2]
-			pins['A3'] = pinAModes[3]
-			pins['A4'] = pinAModes[4]
-			pins['A5'] = pinAModes[5]
-			pins['A6'] = pinAModes[6]
-			pins['A7'] = pinAModes[7]
+			for pinNum in range(0, 7):
+				pinName = 'D'+`pinNum+2`
+				device = models.Device.query.filter_by(pin=pinName, troop=troop.id, scout=scout.id).first()
+				if not device:	# in case DB has no entry for the pin
+					continue
+				if pinDModes[pinNum] < 0:
+					pins[pinName] = {'pin':pinName, 'power':'INACTIVE', 'device':None, 'mode': None}
+				elif pinDModes[pinNum] == 0 or pinDModes[pinNum] == 2:
+					pins[pinName] = {'pin':pinName, 'power':'ACTIVE', 'device':device.name, 'mode':'INPUT'}
+				elif pinDModes[pinNum] == 1:
+					pins[pinName] = {'pin':pinName, 'power':'ACTIVE', 'device':device.name, 'mode':'OUTPUT'}
+			for pinNum in range(0, 8):
+				pinName = 'A'+`pinNum`
+				device = models.Device.query.filter_by(pin=pinName, troop=troop.id, scout=scout.id).first()
+				if not device:  # in case DB has no entry for the pin
+					continue
+				if pinAModes[pinNum] < 0:
+					pins[pinName] = {'pin':pinName, 'power':'INACTIVE', 'device':None, 'mode': None}
+				elif pinAModes[pinNum] == 0 or pinAModes[pinNum] == 2:
+					pins[pinName] = {'pin':pinName, 'power':'ACTIVE', 'device':device.name, 'mode':'INPUT'}
+				elif pinAModes[pinNum] == 1:
+					pins[pinName] = {'pin':pinName, 'power':'ACTIVE', 'device':device.name, 'mode':'OUTPUT'}
 			scoutPins[scout.name] = pins
+			pins = {}
 		troopPins[troop.name] = scoutPins
-
-	return render_template("config.html", title = 'Sensor Configuration'
+	return render_template("config.html", title = 'Sensor Configuration', troopPins = troopPins
 		, troops = account.troops)
 
 @app.route('/communications', methods=['GET', 'POST'])
