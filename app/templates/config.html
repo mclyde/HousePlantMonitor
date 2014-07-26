@@ -31,10 +31,21 @@
 				<h3>{{scout.name}}</h3>
 				<ul>
 					{% for key,value in troopPins[troop.name][scout.name].items() %}
-						<li>{{ value['pin'] }} {{ value['power'] }}
-							{% if value['power'] == 'ACTIVE' %}
-							{{ value['mode'] }} {{ value['device'] }}
-							{% endif %}</li>
+						<li>
+							<span id="pin">{{ value['pin'] }} </span>
+						{% if value['power'] == 'ACTIVE' %}
+							<span id="power" class="label label-success">{{ value['power'] }} </span>
+							{% if value['mode'] == 'INPUT' %}
+							<span id="mode" class="label label-info">{{ value['mode'] }} </span>
+							{% else %}
+							<span id="mode" class="label label-warning">{{ value['mode'] }} </span>
+							{% endif %}
+							<span id="device">{{ value['device'] }}</span>
+						{% else %}
+							<span id="power" class="label label-danger">{{ value['power'] }} </span>
+						{% endif %}
+							<span id="configure">Configure</span>
+						</li>
 					{% endfor %}
 				</ul>
 				</div>

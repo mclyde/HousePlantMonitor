@@ -39,9 +39,7 @@ def config():
 			for pinNum in range(0, 7):
 				pinName = 'D'+`pinNum+2`
 				device = models.Device.query.filter_by(pin=pinName, troop=troop.id, scout=scout.id).first()
-				if not device:	# in case DB has no entry for the pin
-					continue
-				if pinDModes[pinNum] < 0:
+				if pinDModes[pinNum] < 0 or not device:
 					pins[pinName] = {'pin':pinName, 'power':'INACTIVE', 'device':None, 'mode': None}
 				elif pinDModes[pinNum] == 0 or pinDModes[pinNum] == 2:
 					pins[pinName] = {'pin':pinName, 'power':'ACTIVE', 'device':device.name, 'mode':'INPUT'}
@@ -50,9 +48,7 @@ def config():
 			for pinNum in range(0, 8):
 				pinName = 'A'+`pinNum`
 				device = models.Device.query.filter_by(pin=pinName, troop=troop.id, scout=scout.id).first()
-				if not device:  # in case DB has no entry for the pin
-					continue
-				if pinAModes[pinNum] < 0:
+				if pinAModes[pinNum] < 0 or not device:
 					pins[pinName] = {'pin':pinName, 'power':'INACTIVE', 'device':None, 'mode': None}
 				elif pinAModes[pinNum] == 0 or pinAModes[pinNum] == 2:
 					pins[pinName] = {'pin':pinName, 'power':'ACTIVE', 'device':device.name, 'mode':'INPUT'}
