@@ -34,26 +34,39 @@ def config():
 	pins = {}
 	for troop in account.troops:
 		for scout in troop.scouts:
-			pinDModes = pynoccio.PinCmd(scout).report.digital.reply.mode	# get array of ints
-			pinAModes = pynoccio.PinCmd(scout).report.analog.reply.mode
+			#print 'class is ' + pynoccio.PinCmd(scout).report.digital.reply.__class__.__name__
+			#help = pynoccio.PinCmd(scout).report.digital.reply
+			#if isinstance(help, str):
+			#	print 'help = ' + help
+			# Handle inconsistent returns from Pinoccio API
+			pinDTemp = pynoccio.PinCmd(scout).report.digital.reply
+			while isinstance(pinDTemp, str):
+				pinDTemp = pynoccio.PinCmd(scout).report.digital.reply	# get array of ints
+			pinDModes = pinDTemp.mode
+			pinATemp = pynoccio.PinCmd(scout).report.analog.reply
+			while isinstance(pinATemp, str):
+				pinATemp = pynoccio.PinCmd(scout).report.analog.reply
+			pinAModes = pinATemp.mode
+			# End handling
 			for pinNum in range(0, 7):
 				pinName = 'D'+`pinNum+2`
 				device = models.Device.query.filter_by(pin=pinName, troop=troop.id, scout=scout.id).first()
-				if pinDModes[pinNum] < 0 or not device:
+				motor = models.Motor.query.filter_by(pin=pinName, troop=troop.id, scout=scout.id).first()
+				if pinDModes[pinNum] < 0 or (not device and not motor):
 					pins[pinName] = {'pin':pinName, 'power':'INACTIVE', 'device':None, 'mode': None}
 				elif pinDModes[pinNum] == 0 or pinDModes[pinNum] == 2:
 					pins[pinName] = {'pin':pinName, 'power':'ACTIVE', 'device':device.name, 'mode':'INPUT'}
 				elif pinDModes[pinNum] == 1:
-					pins[pinName] = {'pin':pinName, 'power':'ACTIVE', 'device':device.name, 'mode':'OUTPUT'}
+					pins[pinName] = {'pin':pinName, 'power':'ACTIVE', 'device':motor.name, 'mode':'OUTPUT'}
 			for pinNum in range(0, 8):
 				pinName = 'A'+`pinNum`
 				device = models.Device.query.filter_by(pin=pinName, troop=troop.id, scout=scout.id).first()
-				if pinAModes[pinNum] < 0 or not device:
+				if pinAModes[pinNum] < 0 or (not device and not motor):
 					pins[pinName] = {'pin':pinName, 'power':'INACTIVE', 'device':None, 'mode': None}
 				elif pinAModes[pinNum] == 0 or pinAModes[pinNum] == 2:
 					pins[pinName] = {'pin':pinName, 'power':'ACTIVE', 'device':device.name, 'mode':'INPUT'}
 				elif pinAModes[pinNum] == 1:
-					pins[pinName] = {'pin':pinName, 'power':'ACTIVE', 'device':device.name, 'mode':'OUTPUT'}
+					pins[pinName] = {'pin':pinName, 'power':'ACTIVE', 'device':motor.name, 'mode':'OUTPUT'}
 			scoutPins[scout.name] = pins
 			pins = {}
 		troopPins[troop.name] = scoutPins

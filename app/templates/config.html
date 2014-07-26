@@ -5,10 +5,14 @@
 {% block head %}
 	{{super()}}
 	{{fixes.ie8()}}
-	<link type="text/css" rel="stylesheet" href="{{url_for('static',filename='config.css')}}">
-	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<!-- CSS -->
 	<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/themes/smoothness/jquery-ui.css" />
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"</link>
+	<link rel="stylesheet" href="{{url_for('static',filename='config.css')}}">
+	<!-- JavaScript -->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 	<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/jquery-ui.min.js"></script>
+	<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 	<script src="{{url_for('static',filename='config.js')}}" type="text/javascript"></script>
 {% endblock %}
 
@@ -44,7 +48,9 @@
 						{% else %}
 							<span id="power" class="label label-danger">{{ value['power'] }} </span>
 						{% endif %}
-							<span id="configure">Configure</span>
+							<span id="configure">
+								<button type="button" class="btn btn-default" data-container="body" data-html="true" data-toggle="popover" data-placement="bottom" data-content="Config form placeholder">Configure</button>
+							</span>
 						</li>
 					{% endfor %}
 				</ul>

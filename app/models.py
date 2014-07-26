@@ -38,6 +38,7 @@ class Motor(db.Model):
 	scout = db.Column(db.Integer, index = True)
 	troop = db.Column(db.Integer, index = True)	
 	type = db.Column(db.Text, index = True)
+	pin = db.Column(db.String(2))
 	trig_time = db.Column(db.Integer)				# milliseconds
 	untrig_time = db.Column(db.Integer)				# milliseconds
 	delay = db.Column(db.Integer)					# seconds
