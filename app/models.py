@@ -56,7 +56,7 @@ class Soil():
 		self.pin = pin
 		self.troop = troop
 		self.scout = scout
-		self.mode
+		self.mode = mode
 
 
 

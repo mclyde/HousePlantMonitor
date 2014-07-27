@@ -9,6 +9,16 @@ li {
 
 #pin {
 	font-size: 24px;
+	color: #21A307;
+	padding: 0px 0px 0px 4px;
+}
+
+#pin2 {
+	font-size: 24px;
+	color: #21A307;
+	border-style: solid;
+	border-color: black;
+	padding: 0px 0px 0px 4px;
 }
 
 #power {
