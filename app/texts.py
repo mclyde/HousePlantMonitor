@@ -28,37 +28,16 @@ def send_text(recipient, text_body):
 
 def sensor_notification(sensor):
     recipient = db.session.query(Communication).get(1)
-    if recipient.phone is not None and recipient.phone != '':
-    	phone = recipient.phone + carrier_map(recipient.carrier)
+    domain = get_carrier_domain(recipient.carrier)
+
+    if recipient.phone is not None and recipient.phone != '' and domain is not None:
+    	phone = recipient.phone + domain
     	send_text([phone], render_template("text.txt", recipient = phone, sensor = sensor))
 
 
-def carrier_map(carrier):
-	car = str(re.sub('[&-]', '_', carrier.lower()).replace(' ', '_'))
-
-	if car == 'boost_mobile':
-		return '@myboostmobile.com'
-	elif car == 't_mobile':
-		return '@tmomail.net'
-	elif car == 'virgin_mobile':
-		return '@vmobl.com'
-	elif car == 'cingular':
-		return '@cingularme.com'
-	elif car == 'sprint_nextel':
-		return '@messaging.sprintpcs.com'
-	elif car == 'verizon':
-		return '@vtext.com'
-	elif car == 'nextel':
-		return '@messaging.nextel.com'
-	elif car == 'us_cellular':
-		return '@email.uscc.net'
-	elif car == 'suncom':
-		return '@tms.suncom.com'
-	elif car == 'powertel':
-		return '@ptel.net'
-	elif car == 'at_t':
-		return '@txt.att.net'
-	elif car == 'alltel':
-		return '@message.alltel.com'
-	elif car == 'metro_pcs':
-		return '@MyMetroPcs.com'
+def get_carrier_domain(carrier):
+	c = str(re.sub('[&-]', '_', com.carrier.lower()).replace(' ', '_'))
+	c = Carrier.query.filter_by(name=c).first()
+	if c is not None:
+		return c.domain
+	return None

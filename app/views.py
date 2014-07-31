@@ -4,15 +4,11 @@ from flask import render_template, flash, url_for, redirect, Response, request, 
 from flask_bootstrap import Bootstrap
 from twitter import *
 from forms import CommunicationsForm, TelephoneForm
-from models import Communication
+from models import Communication, Carrier
 import emails
 import texts
+import tweets
 
-#To send a tweet
-# from twitter import *
-# make sure twitter tokens are valid for a developer account through twitter
-#tweet = Twitter(auth=OAuth(app.config['TWITTER_TOKEN'], app.config['TWITTER_TOKEN_KEY'], app.config['TWITTER_CON_SEC'], app.config['TWITTER_CON_SEC_KEY']))  
-#tweet.statuses.update(status="Tweet sent from House Plant Monitor") 
 
 @app.route('/')
 @app.route('/index')
@@ -38,14 +34,14 @@ def communications():
         g.twitter = form.twitter.data
         g.phone = form.mobile_phone.number.data
         g.carrier = form.mobile_phone.carrier.data
-        com = Communication(id = 1, name = g.name, email = g.email, twitter = g.twitter, phone = g.phone, carrier = g.carrier)
+        com = Communication(id = 1, name = g.name, email = g.email, twitter = g.twitter, phone = g.phone, carrier = g.carrier.lower())
         db.session.merge(com)
         db.session.commit()
         flash('Communications Saved')
         return redirect(url_for('communications'))
     
     com = db.session.query(Communication).first()
-    if com is not None:
+    if com is not None and com != []:
         form.name.data = com.name
         form.email.data = com.email
         form.twitter.data = com.twitter
