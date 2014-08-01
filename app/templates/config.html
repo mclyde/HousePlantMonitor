@@ -2,32 +2,65 @@
 {% import "bootstrap/wtf.html" as wtf %}
 {% import "bootstrap/fixes.html" as fixes %}
 
-{% block title %}House Plant Monitor{% endblock %}
+{% block head %}
+	{{super()}}
+	{{fixes.ie8()}}
+	<!-- CSS -->
+	<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/themes/smoothness/jquery-ui.css" />
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"</link>
+	<link rel="stylesheet" href="{{url_for('static',filename='config.css')}}">
+	<!-- JavaScript -->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/jquery-ui.min.js"></script>
+	<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+	<script src="{{url_for('static',filename='config.js')}}" type="text/javascript"></script>
+{% endblock %}
+
+{% block title %}
+	House Plant Monitor
+{% endblock %}
 
 {% block navbar %}
-<div class="navbar navbar-fixed-top">{% include "nav.html" %}</div>
+	<div class="navbar navbar-fixed-top">{% include "nav.html" %}</div>
 {% endblock %}
 
 {% block content %}
 <div class="jumbotron">
 	<div class="container">
         <h1>{{title}}</h1>
-	{% for device in presets %}
-		{% if device.name == 'temp' %}
-			<p>Temperature Sensor</p>
-		{% elif device.name == 'light'%}
-			<p>Photometer</p>
-		{% elif device.name == 'soil' %}
-			<p>Soil Moisture Gauge</p>
-		{% elif device.name == 'color' %}
-			<p>Leaf Color Gauge</p>
-		{% endif %}
-	{% endfor %}
-</div>
+		{% for troop in troops %}
+			<h2>{{troop.name}}</h2>
+			{% for scout in troop.scouts %}
+				<div id="scoutpins">
+				<h3>{{scout.name}}</h3>
+				<ul>
+					{% for key,value in troopPins[troop.name][scout.name].items() %}
+						<li>
+							<span id="pin">{{ value['pin'] }} </span>
+						{% if value['power'] == 'ACTIVE' %}
+							<span id="power" class="label label-success">{{ value['power'] }} </span>
+							{% if value['mode'] == 'INPUT' %}
+							<span id="mode" class="label label-info">{{ value['mode'] }} </span>
+							{% else %}
+							<span id="mode" class="label label-warning">{{ value['mode'] }} </span>
+							{% endif %}
+							<span id="device">{{ value['device'] }}</span>
+						{% else %}
+							<span id="power" class="label label-danger">{{ value['power'] }} </span>
+						{% endif %}
+							<span id="configure">
+								<button type="button" class="btn btn-default" data-container="body" data-html="true" data-toggle="popover" data-placement="bottom" data-content="Config form placeholder">Configure</button>
+							</span>
+						</li>
+					{% endfor %}
+				</ul>
+				</div>
+			{% endfor %}
+		{% endfor %}
+	</div>
 </div>
 {% endblock %}
 
-{% block head %}
-{{super()}}
-{{fixes.ie8()}}
-{% endblock %}
+
+
+

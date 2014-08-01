@@ -1,0 +1,68 @@
+ul {
+	list-style-type: none;
+	text-align: justify;
+}
+
+li {
+	margin-bottom: 14px;
+}
+
+#pin {
+	font-size: 24px;
+	color: #21A307;
+	padding: 0px 0px 0px 4px;
+}
+
+#pin2 {
+	font-size: 24px;
+	color: #21A307;
+	border-style: solid;
+	border-color: black;
+	padding: 0px 0px 0px 4px;
+}
+
+#power {
+	font-size: 18px;
+	margin: 8px;
+}
+
+#mode {
+	font-size: 18px;
+	margin: 8px;
+}
+
+#device {
+	font-size: 24px;
+	margin: 8px;
+}
+
+#configure {
+	font-size: 18px;
+	margin: 8px;
+}
+
+.label-success {
+	background-color: #2CF289;
+	border-color: rgb(0, 216, 32);
+	box-shadow: rgb(0, 255, 38) 0px 0px 5px 2px;
+}
+
+.label-danger {
+	background-color: #F04848;
+	border-color: rgb(0, 216, 32);
+	box-shadow: rgb(250, 37, 37) 0px 0px 5px 2px;
+}
+
+.label-warning {
+	background-color: #D6E62E;
+	border-color: rgb(0, 216, 32);
+	box-shadow: rgb(232, 250, 40) 0px 0px 5px 2px;
+}
+
+.label-info {
+	background-color: #3ACCFC;
+	border-color: rgb(0, 216, 32);
+	box-shadow: rgb(102, 217, 255) 0px 0px 5px 2px;
+}
+
+

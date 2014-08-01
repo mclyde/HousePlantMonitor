@@ -55,3 +55,10 @@ docs/_build/
 
 # Pycharm
 .idea/
+
+# Database
+db_repository/
+app.db
+
+#Other
+.DS_Store
