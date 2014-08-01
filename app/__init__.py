@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, g
 from flask_bootstrap import Bootstrap
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask_wtf.csrf import CsrfProtect
@@ -10,5 +10,8 @@ CsrfProtect(app)
 Bootstrap(app)
 db = SQLAlchemy(app)
 mail = Mail(app)
+threads = []
+exitFlag = 0
+
 
 from app import views, models

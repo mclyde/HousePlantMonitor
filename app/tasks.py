@@ -1,14 +1,11 @@
-from app import app, db
+from app import app, db, threads
 from app.Pynoccio import pynoccio
 from models import Device, Motor
-from threading import Thread
+import threading
 import time
 import emails
 import texts
 import tweets
-
-threads = []
-exitFlag = 0
 
 
 class MonitorThread(threading.Thread):
@@ -32,6 +29,7 @@ class ActionThread(threading.Thread):
 
 
 def monitor(device):
+	global threads, exitFlag
 	while True and not exitFlag:
 		time.sleep(device.pollinginterval)
 
@@ -75,6 +73,7 @@ def action(motor):
 
 
 def setup():
+	global threads, exitFlag
 	exitFlag = 1
 	devices = Device.query.all()
 	for d in devices:
@@ -84,17 +83,21 @@ def setup():
 
 
 def start():
+	global threads, exitFlag
 	exitFlag = 0
 	for thread in threads:
 		thread.start()
 
 
 def stop():
-	exitFlag = 1
-	for thread in threads:
-		thread.join()
+	global threads, exitFlag
+	print "Stopping EVERYTHING!"
+	if threads is not []:
+		exitFlag = 1
+		for thread in threads:
+			thread.join()
 
-	threads = []
+		threads = []
 
 
 
@@ -102,15 +105,15 @@ def stop():
 
 def get_reading(troopid, scoutid, pin, digital):
 	account = pynoccio.Account()
-    account.token = app.config['SECURITY_TOKEN']
+	account.token = app.config['SECURITY_TOKEN']
 
-    account.load_troops()
+	account.load_troops()
         
-    for t in account.troops:
-    	if t.id == troop:
-        	for s in t.scouts:
-            	if s.id == scoutid:
-            		# might have to do a loop till we get a valid reading?
-                	reading = pynoccio.PinCmd(s).read(pin)
-                	return reading #.reply??
+	for t in account.troops:
+		if t.id == troop:
+			for s in t.scouts:
+				if s.id == scoutid:
+				# might have to do a loop till we get a valid reading?
+					reading = pynoccio.PinCmd(s).read(pin)
+					return reading #.reply??
 
