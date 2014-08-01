@@ -22,7 +22,6 @@ def send_email(subject, sender, recipient, text_body, html_body):
     msg.html = html_body
     send_async_email(msg)
 
-
 def sensor_notification(sensor):
     recipient = db.session.query(Communication).get(1)
     send_email("[House Plant Monitor] Scout: %s reading notification" % sensor.scout, ADMIN, [recipient.email], render_template("notification.txt", recipient = recipient, sensor = sensor), render_template("notification.html", recipient = recipient, sensor = sensor))

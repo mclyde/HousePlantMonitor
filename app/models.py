@@ -24,9 +24,11 @@ class Communication(db.Model):
 
 class Device(db.Model):
 	id = db.Column(db.Integer, primary_key = True)	# Unique identifier so we can self reference the table for a motor
+	name = db.Column(db.String(64))
 	troop = db.Column(db.Integer, index = True)		# The troop id # (from Pinnocc.io HQ)
 	scout = db.Column(db.Integer, index = True)		# The scout id # (from Pinnocc.io HQ) that the device is connected to
 	type = db.Column(db.Text, index = True)			# e.g. soil, temp, light, etc.
+	mode = db.Column(db.Integer)					# -1 DISABLED 0 INPUT, 1 OUTPUT, 2 INPUT_PULLUP
 	pin = db.Column(db.String(2))					# e.g. D2, A4, etc.
 	digital = db.Column(db.Boolean)					# 0 false 1 true
 	dtrigger = db.Column(db.String(4))				# HIGH or LOW
@@ -36,8 +38,10 @@ class Device(db.Model):
 	text = db.Column(db.Boolean)					# 0 false 1 true
 	email = db.Column(db.Boolean)
 	tweet = db.Column(db.Boolean)
-	motor = db.relationship('Motor', backref = 'device')			# id of Motor
+	motor = db.relationship('Motor', backref = 'owner') # id of Motor
 
+	def __repr__(self):
+		return '<Device %r>' % (self.name)
 
 class Motor(db.Model):
 	id = db.Column(db.Integer, primary_key = True)
@@ -55,7 +59,6 @@ class Motor(db.Model):
 	def __repr__(self):
 		return '<Motor %r>' % (self.name)
 
-
 class Soil():
 	type = 'soil'
 	def __init__(self, name, pin, troop, scout, mode):
@@ -64,3 +67,4 @@ class Soil():
 		self.troop = troop
 		self.scout = scout
 		self.mode = mode
+

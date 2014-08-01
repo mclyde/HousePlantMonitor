@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import os
 
 #Pinnocio
