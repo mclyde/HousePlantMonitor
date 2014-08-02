@@ -1,3 +1,8 @@
+# =======================================================================================
+# Copyright 2014 Matt Clyde, Shawn Forgie, Blake Wellington
+# Licensed under GPL v2 (https://github.com/mclyde/HousePlantMonitor/blob/master/LICENSE)
+# =======================================================================================
+
 from flask_mail import Message
 from app import mail, db, models
 from models import Communication
