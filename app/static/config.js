@@ -5,6 +5,13 @@
 
 $(document).ready(function() { $('body').hide().fadeIn(1000); })
 
+var popContent = "<form><input type='text'/></form>";
+
 $(function () { 
-    $("[data-toggle='popover']").popover(); 
+    $("[data-toggle='popover']").popover({	container:'body',
+    										html:'true',
+    										placement:'bottom',
+    										trigger:'focus',
+    										content:popContent
+    									}); 
 });
