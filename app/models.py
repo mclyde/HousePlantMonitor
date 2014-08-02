@@ -1,5 +1,27 @@
 from app import db
 
+
+#To insert the default data for carriers
+#INSERT into carrier (name, domain) VALUES('boost_mobile', '@myboostmobile.com'),('t_mobile', '@tmomail.net'),('virgin_mobile', '@vmobl.com'), ('cingular', '@cingularme.com'),('sprint_nextel', '@messaging.sprintpcs.com'),('verizon', '@vtext.com'),('nextel', '@messaging.nextel.com'),('us_cellular', '@email.uscc.net'),('suncom', '@tms.suncom.com'),('powertel', '@ptel.net'),('at_t', '@txt.att.net'),('alltel', '@message.alltel.com'),('metro_pcs', '@MyMetroPcs.com');
+
+class Carrier(db.Model):
+	__tablename__ = 'carrier'
+	name = db.Column(db.String(120), index = True, primary_key = True)
+	domain = db.Column(db.String(120))
+	
+
+class Communication(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    name = db.Column(db.String(120), index = True, unique = True)
+    email = db.Column(db.String(120), index = True)
+    twitter = db.Column(db.String(120))
+    phone = db.Column(db.String(15))
+    carrier = db.Column(db.String(120), db.ForeignKey('carrier.name'))
+
+    def __repr__(self):
+        return '<Communication %r>' % (self.name)
+
+
 class Device(db.Model):
 	id = db.Column(db.Integer, primary_key = True)	# Unique identifier so we can self reference the table for a motor
 	name = db.Column(db.String(64))
@@ -21,22 +43,11 @@ class Device(db.Model):
 	def __repr__(self):
 		return '<Device %r>' % (self.name)
 
-class Communication(db.Model):
-    id = db.Column(db.Integer, primary_key = True)
-    name = db.Column(db.String(120), index = True, unique = True)
-    email = db.Column(db.String(120), index = True)
-    twitter = db.Column(db.String(120))
-    phone = db.Column(db.String(15))
-    carrier = db.Column(db.String(120))
-
-    def __repr__(self):
-        return '<Communication %r>' % (self.name)
-
 class Motor(db.Model):
 	id = db.Column(db.Integer, primary_key = True)
 	name = db.Column(db.String(64))
 	scout = db.Column(db.Integer, index = True)
-	troop = db.Column(db.Integer, index = True)	
+	troop = db.Column(db.Integer, index = True)
 	type = db.Column(db.Text, index = True)
 	pin = db.Column(db.String(2))
 	trig_time = db.Column(db.Integer)				# milliseconds
@@ -50,14 +61,10 @@ class Motor(db.Model):
 
 class Soil():
 	type = 'soil'
-
 	def __init__(self, name, pin, troop, scout, mode):
 		self.name = name
 		self.pin = pin
 		self.troop = troop
 		self.scout = scout
 		self.mode = mode
-
-
-
 

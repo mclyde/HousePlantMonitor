@@ -1,0 +1,3 @@
+Notification from Scout {{sensor.scout}}
+
+Reading: {{sensor.reply}}
