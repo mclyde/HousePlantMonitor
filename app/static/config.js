@@ -3,15 +3,36 @@
  * Licensed under GPL v2 (https://github.com/mclyde/HousePlantMonitor/blob/master/LICENSE)
  * ===================================================================================== */
 
-$(document).ready(function() { $('body').hide().fadeIn(1000); })
+$(document).ready(function() { $('body').hide().fadeIn(1000); });
 
-var popContent = "<form><input type='text'/></form>";
+var deviceTypes = {
+	'inputs':  ['Photometer', 'Soil Monitor', 'Thermometer'],
+	'outputs': ['Email', 'Text Message', 'Tweet',  'Motor: Shades', 'Motor: Water']
+}
+
+var $types = $('select.deviceClass');
+var $subset = $('select.subset');
+$types.change(function () {
+	$subset.empty().append(function() {
+		var displayList = '';
+		$.each(deviceTypes[$types.val()], function(item) {
+			displayList += '<option>' + item + '</option>';
+		});
+		return displayList;
+	});
+}).change();
 
 $(function () { 
     $("[data-toggle='popover']").popover({	container:'body',
     										html:'true',
     										placement:'bottom',
-    										trigger:'focus',
-    										content:popContent
+    										trigger:'click',
+    										title: function() {
+												return $('#popover-head').html();
+											},
+											content: function() {
+												return $('#popover-content').html();
+											}
     									}); 
 });
+

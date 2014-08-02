@@ -64,6 +64,10 @@ class Motor(db.Model):
 	def __repr__(self):
 		return '<Motor %r>' % (self.name)
 
+class DeviceTypes():
+	inputs = ['Soil Monitor', 'Thermometer', 'Photometer']
+	outputs = ['Email', 'Text Message', 'Tweet', 'Water', 'Shades']
+
 class Soil():
 	type = 'soil'
 	def __init__(self, name, pin, troop, scout, mode):
@@ -73,3 +77,12 @@ class Soil():
 		self.scout = scout
 		self.mode = mode
 
+class Temp():
+	type = 'temp'
+	def __init__(self, name, pin, troop, scout, mode):
+		self.name = name
+		self.pin = pin
+		self.troop = troop
+		self.scout = scout
+		self.mode = mode
+		

@@ -76,7 +76,7 @@ def config():
 		troopPins[troop.name] = scoutPins
 
 	return render_template("config.html", title = 'Sensor Configuration', troopPins = troopPins
-		, troops = account.troops)
+		, troops = account.troops, inputs = DeviceTypes.inputs, outputs = DeviceTypes.outputs)
 
 @app.route('/communications', methods=['GET', 'POST'])
 def communications():

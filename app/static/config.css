@@ -65,4 +65,13 @@ li {
 	box-shadow: rgb(102, 217, 255) 0px 0px 5px 2px;
 }
 
+.popover {
+	min-width: 600px;
+}
+
+.form-horizontal {
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
 
