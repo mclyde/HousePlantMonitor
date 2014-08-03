@@ -79,7 +79,7 @@ def config():
 @app.route('/configform', methods=['GET', 'POST'])
 def configform():
 	if request.method == 'POST':
-		return redirect(url_for('/config'), code='200')
+		return redirect(url_for('config'))
 	return render_template('configform.html', title = 'Device Configuration')
 
 @app.route('/communications', methods=['GET', 'POST'])

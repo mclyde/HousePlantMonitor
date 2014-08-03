@@ -31,6 +31,7 @@
 	<div class="container">
 		<h2>{{title}}</h2>
 		<form role='form' class='form-horizontal' id='config-form' method='POST'>
+			<input name=_csrf_token type=hidden value="{{ csrf_token() }}">
 			<div class='form-group'>
 				<label id='nameLabel' for='inputName' class='control-label col-xs-3'>Device Name:</label>
 				<div class='col-xs-5'>
