@@ -15,6 +15,9 @@ var outputs = [
 	{display:'Motor: Shades', value:'shade'},
 	{display:'Motor: Water', value:'water'}
 ];
+var defaults = [
+	{display:'---', value:''}
+]
 var sliderOptions = {
 	range:true,
 	min: 0,
@@ -28,18 +31,7 @@ $(function () {
 	$('body').hide().fadeIn(1000);
 	$('#inputMode').hide();
 	$('#outputMode').hide();
-    $("[data-toggle='popover']").popover({	container:'body',
-    										html:'true',
-    										placement:'bottom',
-    										trigger:'click',
-    										title: function() {
-												return $('#popover-head').html();
-											},
-											content: function() {
-												return $('#popover-content').html();
-											}
-    									});
-
+	$('#submitbutton').hide();
 });
 
 $(document).on('change', 'select.deviceClass', function() {
@@ -48,15 +40,19 @@ $(document).on('change', 'select.deviceClass', function() {
 			list(inputs);
 			$('#outputMode').hide();
 			$('#inputMode').show();
+			$('#submitbutton').show();
 			break;
 		case 'outputs':
 			list(outputs);
 			$('#inputMode').hide();
 			$('#outputMode').show();
+			$('#submitbutton').show();
 			break;
-		default:
+		case 'defaults':
+			list(defaults);
 			$('#inputMode').hide();
 			$('#outputMode').hide();
+			$('#submitbutton').hide();
 			break;
 	}
 });

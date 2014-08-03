@@ -48,65 +48,7 @@
 						{% else %}
 							<span id="power" class="label label-danger">{{ value['power'] }} </span>
 						{% endif %}
-							<span id="configure">
-								<button type="button" class="btn btn-default popover-dismiss" id="popover" data-toggle="popover">Configure</button>
-								<div id="popover-head", class="hide">Device Configuration</div>
-								<div id="popover-content" class="hide">
-									<form role='form' class='form-horizontal' id='config-form'>
-										<div class='form-group'>
-											<label id='nameLabel' for='inputName' class='control-label col-xs-3'>Device Name:</label>
-											<div class='col-xs-8'>
-												<input type='text' class='form-control' id='deviceName' placeholder='Enter a unique name for this device'>
-											</div>
-										</div>
-										<div class='form-group'>
-											<label id='typeLabel' for='inputType' class='control-label col-xs-3'>Device Type:</label>
-											<div class='col-xs-8 dropdown'>
-												<select class='deviceClass' id='deviceClass' name='deviceClass'>
-													<option selected='selected'>---</option>
-													<option value='inputs'>Input Device</option>
-													<option value='outputs'>Output Device</option>
-												</select>
-												<select class='subset' id='subset' name='subset'>
-												</select>
-											</div>
-										</div>
-										<span id='inputMode' class='inputMode'>
-											<div class='form-group'>
-                        <label id='upper' for='upper' class='control-label col-xs-3'>Upper Threshold:</label>
-                        <div class='col-xs-3'>
-                          <input type='text' class='form-control' id='upperThreshold' placeholder='0 to 1023'>
-                        </div>
-                      </div>
-                      <div class='form-group'>
-                        <label id='lower' for='lower' class='control-label col-xs-3'>Lower Threshold:</label>
-                        <div class='col-xs-3'>
-                          <input type='text' class='form-control' id='lowerThreshold' placeholder='0 to 1023'>
-                        </div>
-                      </div>
-											<div class='form-group'>
-												<label id='outputMethod' for='outputMethod' class='control-label col-xs-3'>Trigger:</label>
-											</div>
-										</span>
-										<span id='outputMode' class='outputMode'>
-											<div class='form-group'>
-												<label id='trigTime' for='trigTime' class='control-label col-xs-3'>Trigger Time:</label>
-											</div>
-											<div class='form-group'>
-												<label id='untrigTime' for='untrigTime' class='control-label col-xs-3'>Untrigger Time:</label>
-											</div>
-											<div class='form-group'>
-												<label id='untrigDelay' for='untrigDelay' class='control-label col-xs-3'>Delay:</label>
-											</div>
-										</span>
-										<div class='form-group'>
-											<div class='col-xs-offset-3 col-xs-8'>
-												<button type='submit' class='btn btn-default'>Submit</button>
-											</div>
-										</div>
-									</form>
-								</div>
-							</span>
+              <a href='/configform' class="btn btn-default">Configure</a>
 						</li>
 					{% endfor %}
 				</ul>

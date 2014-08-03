@@ -7,13 +7,17 @@ from app import app, db, models
 from app.Pynoccio import pynoccio
 from flask import render_template, flash, url_for, redirect, Response, request, g, session
 from flask_bootstrap import Bootstrap
-from forms import CommunicationsForm, TelephoneForm
+from forms import CommunicationsForm, TelephoneForm, ConfigForm
 from models import *
 import emails
 import texts
 import tweets
 import sqlite3
 
+DEVICE_CLASSES = {
+	'input':  ['Photometer', 'Soil Sensor', 'Thermometer'],
+	'output': ['Email', 'Text Message', 'Tweet', 'Motor: Shades', 'Motor: Water']
+}
 
 @app.route('/')
 @app.route('/index')
@@ -77,6 +81,18 @@ def config():
 
 	return render_template("config.html", title = 'Sensor Configuration', troopPins = troopPins
 		, troops = account.troops)
+
+@app.route('/configform', methods=['GET', 'POST'])
+def configform():
+	form = ConfigForm()
+	form.type.choices = DEVICE_CLASSES.get(form.type.data) or []
+
+	if form.validate_on_submit():
+		if form.deviceClass.data == 'output':
+			print "HI"
+		if form.deviceClass.data == 'input':
+			print "BYE"
+	return render_template('configform.html', title = 'Device Configuration')
 
 @app.route('/communications', methods=['GET', 'POST'])
 def communications():
