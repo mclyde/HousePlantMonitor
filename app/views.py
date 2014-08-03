@@ -84,6 +84,8 @@ def config():
 
 @app.route('/configform', methods=['GET', 'POST'])
 def configform():
+	
+	
 	form = ConfigForm()
 	form.type.choices = DEVICE_CLASSES.get(form.type.data) or []
 

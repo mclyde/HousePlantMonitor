@@ -5,14 +5,16 @@
 {% block head %}
 	{{super()}}
 	{{fixes.ie8()}}
+	<meta charset="utf-8">
 	<!-- CSS -->
 	<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/themes/smoothness/jquery-ui.css" />
-	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"</link>
+	<link rel='stylesheet' href='//ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css'>
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.css"</link>
 	<link rel="stylesheet" href="{{url_for('static',filename='config.css')}}">
 	<!-- JavaScript -->
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.js"></script>
 	<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/jquery-ui.js"></script>
-	<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+	<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.js"></script>
 	<script src="{{url_for('static',filename='config.js')}}" type="text/javascript"></script>
 {% endblock %}
 
@@ -27,7 +29,7 @@
 {% block content %}
 <div class="jumbotron">
 	<div class="container">
-		<h1>{{title}}</h1>
+		<h2>{{title}}</h2>
 		<form role='form' class='form-horizontal' id='config-form'>
 			<div class='form-group'>
 				<label id='nameLabel' for='inputName' class='control-label col-xs-3'>Device Name:</label>
@@ -50,17 +52,22 @@
 			</div>
 			<span id='inputMode' class='inputMode'>
 				<div class='form-group'>
-                    <label id='upper' for='upper' class='control-label col-xs-3'>Upper Threshold:</label>
-                    <div class='col-xs-3'>
-                    	<input type='text' class='form-control' id='upperThreshold' placeholder='0 to 1023'>
-                    </div>
-                </div>
-                <div class='form-group'>
-                    <label id='lower' for='lower' class='control-label col-xs-3'>Lower Threshold:</label>
-                    <div class='col-xs-3'>
-                        <input type='text' class='form-control' id='lowerThreshold' placeholder='0 to 1023'>
-                    </div>
-                </div>
+					<label for="amount" class='control-label col-xs-3'>Threshold:</label>
+					<div id="slider-range" class='col-xs-5'></div>
+					<script>
+						$( "#slider-range" ).slider({
+							range: true,
+							min: 0,
+							max: 1023,
+							values: [ 250, 750 ],
+							slide: function( event, ui ) {
+								$( "#amount" ).val( ui.values[ 0 ] + " - " + ui.values[ 1 ] );
+							}
+						});
+						$( "#amount" ).val( $( "#slider-range" ).slider( "values", 0 ) + " - " + $( "#slider-range" ).slider( "values", 1 ) );
+					</script>
+					<input type="text" id="amount" class='col-xs-2' readonly>
+				</div>
 				<div class='form-group'>
 					<label id='outputMethod' for='outputMethod' class='control-label col-xs-3'>Trigger:</label>
 				</div>

@@ -18,17 +18,8 @@ var outputs = [
 var defaults = [
 	{display:'---', value:''}
 ]
-var sliderOptions = {
-	range:true,
-	min: 0,
-	max: 1023,
-	step: 1,
-	tooltip: 'hide',
-	value: [0, 1023]
-};
 
 $(function () {
-	$('body').hide().fadeIn(1000);
 	$('#inputMode').hide();
 	$('#outputMode').hide();
 	$('#submitbutton').hide();
@@ -56,6 +47,8 @@ $(document).on('change', 'select.deviceClass', function() {
 			break;
 	}
 });
+
+
 
 function list(arr) {
 	$('.subset').html("");
