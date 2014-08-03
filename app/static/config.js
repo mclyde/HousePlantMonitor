@@ -26,6 +26,8 @@ var sliderOptions = {
 
 $(function () {
 	$('body').hide().fadeIn(1000);
+	$('#inputMode').hide();
+	$('#outputMode').hide();
     $("[data-toggle='popover']").popover({	container:'body',
     										html:'true',
     										placement:'bottom',
@@ -36,30 +38,25 @@ $(function () {
 											content: function() {
 												return $('#popover-content').html();
 											}
-    									}).click(function() {
-    										$('#rangeSlider').slider().on('slide', function(ev) {
-    											sliderVal = ev.value;
-    										});
-    										if(sliderVal) {
-    											$('#rangeSlider').slider('setValue, sliderVal)')
-    										}
     									});
 
-    
 });
 
-//$slider = $('#slider-range').slider(sliderOptions);
-
 $(document).on('change', 'select.deviceClass', function() {
-	var key = $(this).val();
-	switch(key) {
+	switch($(this).val()) {
 		case 'inputs':
 			list(inputs);
+			$('#outputMode').hide();
+			$('#inputMode').show();
 			break;
 		case 'outputs':
 			list(outputs);
+			$('#inputMode').hide();
+			$('#outputMode').show();
 			break;
 		default:
+			$('#inputMode').hide();
+			$('#outputMode').hide();
 			break;
 	}
 });
