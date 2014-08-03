@@ -15,6 +15,14 @@ var outputs = [
 	{display:'Motor: Shades', value:'shade'},
 	{display:'Motor: Water', value:'water'}
 ];
+var sliderOptions = {
+	range:true,
+	min: 0,
+	max: 1023,
+	step: 1,
+	tooltip: 'hide',
+	value: [0, 1023]
+};
 
 $(function () {
 	$('body').hide().fadeIn(1000);
@@ -28,12 +36,22 @@ $(function () {
 											content: function() {
 												return $('#popover-content').html();
 											}
+    									}).click(function() {
+    										$('#rangeSlider').slider().on('slide', function(ev) {
+    											sliderVal = ev.value;
+    										});
+    										if(sliderVal) {
+    											$('#rangeSlider').slider('setValue, sliderVal)')
+    										}
     									});
+
+    
 });
+
+//$slider = $('#slider-range').slider(sliderOptions);
 
 $(document).on('change', 'select.deviceClass', function() {
 	var key = $(this).val();
-	console.log(key);
 	switch(key) {
 		case 'inputs':
 			list(inputs);
