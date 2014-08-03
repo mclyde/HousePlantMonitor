@@ -52,33 +52,31 @@
 								<button type="button" class="btn btn-default popover-dismiss" id="popover" data-toggle="popover">Configure</button>
 								<div id="popover-head", class="hide">Device Configuration</div>
 								<div id="popover-content" class="hide">
-
-										<form role='form' class='form-horizontal' id='config-form'>
-											<div class='form-group'>
-												<label id='nameLabel' for='inputName' class='control-label col-xs-3'>Device Name:</label>
-												<div class='col-xs-8'>
-													<input type='text' class='form-control' id='deviceName' placeholder='Device name'>
-												</div>
+									<form role='form' class='form-horizontal' id='config-form'>
+										<div class='form-group'>
+											<label id='nameLabel' for='inputName' class='control-label col-xs-3'>Device Name:</label>
+											<div class='col-xs-8'>
+												<input type='text' class='form-control' id='deviceName' placeholder='Device name'>
 											</div>
-											<div class='form-group'>
-												<label id='typeLabel' for='inputType' class='control-label col-xs-3'>Device Type:</label>
-												<div class='col-xs-8 dropdown'>
-													<select class='deviceClass'>
-														<option value='inputs'>Input Device</option>
-														<option value='outputs'>Output Device</option>
-													</select>
-													<select class='subset'>
-														<option></option>
-													</select>
-												</div>
+										</div>
+										<div class='form-group'>
+											<label id='typeLabel' for='inputType' class='control-label col-xs-3'>Device Type:</label>
+											<div class='col-xs-8 dropdown'>
+												<select class='deviceClass' id='deviceClass' name='deviceClass'>
+													<option value='base' selected='selected'>---</option>
+													<option value='inputs'>Input Device</option>
+													<option value='outputs'>Output Device</option>
+												</select>
+												<select class='subset' id='subset' name='subset'>
+												</select>
 											</div>
-											<div class='form-group'>
-												<div class='col-xs-offset-3 col-xs-8'>
-													<button type='submit' class='btn btn-default'>Submit</button>
-												</div>
+										</div>
+										<div class='form-group'>
+											<div class='col-xs-offset-3 col-xs-8'>
+												<button type='submit' class='btn btn-default'>Submit</button>
 											</div>
-										</form>
-
+										</div>
+									</form>
 								</div>
 							</span>
 						</li>
