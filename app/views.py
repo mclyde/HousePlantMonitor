@@ -1,3 +1,8 @@
+# =======================================================================================
+# Copyright 2014 Matt Clyde, Shawn Forgie, Blake Wellington
+# Licensed under GPL v2 (https://github.com/mclyde/HousePlantMonitor/blob/master/LICENSE)
+# =======================================================================================
+
 from app import app, db, models
 from app.Pynoccio import pynoccio
 from flask import render_template, flash, url_for, redirect, Response, request, g, session
@@ -29,10 +34,12 @@ def config():
 	pins = {}
 	for troop in account.troops:
 		for scout in troop.scouts:
+
 			#print 'class is ' + pynoccio.PinCmd(scout).report.digital.reply.__class__.__name__
 			#help = pynoccio.PinCmd(scout).report.digital.reply
 			#if isinstance(help, str):
 			#	print 'help = ' + help
+
 			# Handle inconsistent returns from Pinoccio API
 			pinDTemp = pynoccio.PinCmd(scout).report.digital.reply
 			while isinstance(pinDTemp, str):
@@ -43,6 +50,7 @@ def config():
 				pinATemp = pynoccio.PinCmd(scout).report.analog.reply
 			pinAModes = pinATemp.mode
 			# End handling
+
 			for pinNum in range(0, 7):
 				pinName = 'D'+`pinNum+2`
 				device = models.Device.query.filter_by(pin=pinName, troop=troop.id, scout=scout.id).first()
@@ -62,9 +70,11 @@ def config():
 					pins[pinName] = {'pin':pinName, 'power':'ACTIVE', 'device':device.name, 'mode':'INPUT'}
 				elif pinAModes[pinNum] == 1:
 					pins[pinName] = {'pin':pinName, 'power':'ACTIVE', 'device':motor.name, 'mode':'OUTPUT'}
+
 			scoutPins[scout.name] = pins
 			pins = {}
 		troopPins[troop.name] = scoutPins
+
 	return render_template("config.html", title = 'Sensor Configuration', troopPins = troopPins
 		, troops = account.troops)
 
