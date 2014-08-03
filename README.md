@@ -17,6 +17,8 @@ JQuery (http://jquery.org/license)
 
 Bootstrap (https://github.com/twbs/bootstrap/blob/master/LICENSE)
 
+Bootstrap-slider (http://www.eyecon.ro/bootstrap-slider/)
+
 ##Dependencies
 Users will need to download and install Python 2.7 and the following libraries:
 * flask
