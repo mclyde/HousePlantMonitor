@@ -58,6 +58,10 @@ li {
 	margin-left: 8px;
 }
 
+#triggerDevice {
+	margin-top: 8px;
+}
+
 .label-success {
 	background-color: #2CF289;
 	border-color: rgb(0, 216, 32);

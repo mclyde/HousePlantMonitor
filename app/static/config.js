@@ -9,9 +9,9 @@ var inputs = [
 	{display:'Thermometer', value:'temp'}
 ];
 var outputs = [
-	{display:'Email', value:'email'},
-	{display:'Text Message', value:'text'},
-	{display:'Tweet', value:'tweet'},
+	//{display:'Email', value:'email'},
+	//{display:'Text Message', value:'text'},
+	//{display:'Tweet', value:'tweet'},
 	{display:'Motor: Shades', value:'shade'},
 	{display:'Motor: Water', value:'water'}
 ];
@@ -37,6 +37,7 @@ $(document).on('change', 'select.deviceClass', function() {
 			list(outputs);
 			$('#inputMode').hide();
 			$('#outputMode').show();
+			$('#delaytrigger').hide();
 			$('#submitbutton').show();
 			break;
 		case 'defaults':
@@ -48,7 +49,18 @@ $(document).on('change', 'select.deviceClass', function() {
 	}
 });
 
-
+$(document).on('change', 'select.subset', function() {
+	switch($(this).val()) {
+		case 'shade':
+			$('#delaytrigger').hide();
+			break;
+		case 'water':
+			$('#delaytrigger').show();
+			break;
+		case 'defaults':
+			break;
+	}
+});
 
 function list(arr) {
 	$('.subset').html("");

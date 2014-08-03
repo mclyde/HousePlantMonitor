@@ -7,28 +7,27 @@ from app import app, db, models
 from app.Pynoccio import pynoccio
 from flask import render_template, flash, url_for, redirect, Response, request, g, session
 from flask_bootstrap import Bootstrap
-from forms import CommunicationsForm, TelephoneForm, ConfigForm
+from forms import CommunicationsForm, TelephoneForm
 from models import *
 import emails
 import texts
 import tweets
 import sqlite3
 
-DEVICE_CLASSES = {
-	'input':  ['Photometer', 'Soil Sensor', 'Thermometer'],
-	'output': ['Email', 'Text Message', 'Tweet', 'Motor: Shades', 'Motor: Water']
-}
-
 @app.route('/')
 @app.route('/index')
 def index():
     return render_template("index.html", title = 'Home')
 
-@app.route('/config')
+@app.route('/config', methods=['GET', 'POST'])
 def config():
 	account = pynoccio.Account()
 	account.token = app.config['SECURITY_TOKEN']
 	account.load_troops()
+
+	if request.method == 'POST':
+		if request.form['deviceClass'] == 'outputs':
+			print 'hi'
 
 	devices = models.Device.query.all()
 	motors = models.Motor.query.all()
@@ -38,11 +37,6 @@ def config():
 	pins = {}
 	for troop in account.troops:
 		for scout in troop.scouts:
-
-			#print 'class is ' + pynoccio.PinCmd(scout).report.digital.reply.__class__.__name__
-			#help = pynoccio.PinCmd(scout).report.digital.reply
-			#if isinstance(help, str):
-			#	print 'help = ' + help
 
 			# Handle inconsistent returns from Pinoccio API
 			pinDTemp = pynoccio.PinCmd(scout).report.digital.reply
@@ -84,16 +78,8 @@ def config():
 
 @app.route('/configform', methods=['GET', 'POST'])
 def configform():
-	
-	
-	form = ConfigForm()
-	form.type.choices = DEVICE_CLASSES.get(form.type.data) or []
-
-	if form.validate_on_submit():
-		if form.deviceClass.data == 'output':
-			print "HI"
-		if form.deviceClass.data == 'input':
-			print "BYE"
+	if request.method == 'POST':
+		return redirect(url_for('/config'), code='200')
 	return render_template('configform.html', title = 'Device Configuration')
 
 @app.route('/communications', methods=['GET', 'POST'])

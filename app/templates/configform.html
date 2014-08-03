@@ -30,10 +30,10 @@
 <div class="jumbotron">
 	<div class="container">
 		<h2>{{title}}</h2>
-		<form role='form' class='form-horizontal' id='config-form'>
+		<form role='form' class='form-horizontal' id='config-form' method='POST'>
 			<div class='form-group'>
 				<label id='nameLabel' for='inputName' class='control-label col-xs-3'>Device Name:</label>
-				<div class='col-xs-8'>
+				<div class='col-xs-5'>
 					<input type='text' class='form-control' id='deviceName' placeholder='Enter a unique name for this device'>
 				</div>
 			</div>
@@ -46,7 +46,7 @@
 						<option value='outputs'>Output Device</option>
 					</select>
 					<select class='subset' id='subset' name='subset'>
-						<option value=''>---</option>
+						<option value='defaults'>---</option>
 					</select>
 				</div>
 			</div>
@@ -70,18 +70,37 @@
 				</div>
 				<div class='form-group'>
 					<label id='outputMethod' for='outputMethod' class='control-label col-xs-3'>Trigger:</label>
+					<div class='col-xs-8 dropdown'>
+						<select class='triggerDevice' id='triggerDevice' name='triggerDevice'>
+							<option value='email' selected='selected'>Email</option>
+							<option value='text'>Text Message</option>
+							<option value='tweet'>Tweet</option>
+
+						</select>
+					</div>
 				</div>
 			</span>
 			<span id='outputMode' class='outputMode'>
 				<div class='form-group'>
 					<label id='trigTime' for='trigTime' class='control-label col-xs-3'>Trigger Time:</label>
+					<div class='col-xs-4'>
+						<input type='text' class='form-control' id='trigMilli' placeholder='Time to run motor forward (milliseconds)'>
+					</div>
 				</div>
 				<div class='form-group'>
 					<label id='untrigTime' for='untrigTime' class='control-label col-xs-3'>Untrigger Time:</label>
+					<div class='col-xs-4'>
+						<input type='text' class='form-control' id='untrigMilli' placeholder='Time to run motor backward (milliseconds)'>
+					</div>
 				</div>
-				<div class='form-group'>
-					<label id='untrigDelay' for='untrigDelay' class='control-label col-xs-3'>Delay:</label>
-				</div>
+				<span id='delaytrigger' class='delaytrigger'>
+					<div class='form-group'>
+						<label id='untrigDelay' for='untrigDelay' class='control-label col-xs-3'>Delay:</label>
+						<div class='col-xs-4'>
+							<input type='text' class='form-control' id='delaySec' placeholder='Delay between trigger and untrigger (seconds)'>
+						</div>
+					</div>
+				</span>
 			</span>
 			<span id='submitbutton' class='submitbutton'>
 				<div class='form-group'>

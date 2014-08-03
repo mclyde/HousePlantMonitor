@@ -20,9 +20,4 @@ class CommunicationsForm(Form):
 	mobile_phone = FormField(TelephoneForm, description='The number you would like to scoutnet to sent notifications to.')
 	submit_button = SubmitField('Submit Form')
 
-class ConfigForm(Form):
-	name = TextField('Device Name:', description='A unique name for this device')
-	category = SelectField('Device Class:', choices=[('Input Device', 'input'),('Output Device', 'output')])
-	type = SelectField('Device Type:')
-
 
