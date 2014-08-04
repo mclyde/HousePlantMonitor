@@ -86,6 +86,8 @@ def config():
 def configform(troop, scout, pin):
 	if request.method == 'POST':
 
+		# TODO: Add delete device/motor option
+
 		# Prepare scout object for Pinoccio API query
 		account = pynoccio.Account()
 		account.token = app.config['SECURITY_TOKEN']
@@ -99,20 +101,59 @@ def configform(troop, scout, pin):
 
 		# If the user chose to add an input device
 		if request.form.get('deviceClass') == 'inputs':
+
+			# Get current state of new device
 			if pin in ANALOG_PINS:
 				pinATemp = pynoccio.PinCmd(report_scout).report.analog.reply
 				while isinstance(pinATemp, str):
 					pinATemp = pynoccio.PinCmd(report_scout).report.analog.reply
 				pinAStates = pinATemp.state
+				digital = False
 
-			if pin in DIGITAL_PINS:
+			elif pin in DIGITAL_PINS:
 				pinDTemp = pynoccio.PinCmd(report_scout).report.digital.reply
 				while isinstance(pinDTemp, str):
 					pinDTemp = pynoccio.PinCmd(report_scout).report.digital.reply
 				pinDStates = pinDTemp.state
+				digital = True
 
 			else:
-				print "ERROR"
+				print "ERROR"			# TODO
+
+			output_settings = request.form.get('triggerDevice')
+			new_device = models.Device(
+				name = request.form.get('deviceName') or 'Unnamed Sensor',
+				troop = scout,
+				scout = troop,
+				type = request.form.get('subset'),
+				mode = 2,				# TODO
+				pin = pin,
+				digital = digital,
+				dtrigger = 'HIGH',		# TODO
+				atriggerupper = request.form.get('threshold[0]') or 1023,	# TODO
+				atriggerlower = request.form.get('threshold[1]') or 0,		# TODO
+				pollinginterval = 15,	# TODO
+				text = True if output_settings == 'text' else False,
+				email = True if output_settings == 'email' else False,
+				tweet = True if output_settings == 'tweet' else False,
+				motor = []				# TODO
+			)
+			print new_device.name
+			print new_device.scout
+			print new_device.troop
+			print new_device.type
+			print new_device.mode
+			print new_device.pin
+			print new_device.digital
+			print new_device.dtrigger
+			print new_device.atriggerupper
+			print new_device.atriggerlower
+			print new_device.pollinginterval
+			print new_device.text
+			print new_device.email
+			print new_device.tweet
+			print new_device.motor
+			db.session.add(new_device)
 
 		# If the user chose to add an output motor
 		elif request.form.get('deviceClass') == 'outputs':
@@ -123,10 +164,11 @@ def configform(troop, scout, pin):
 				pinDTemp = pynoccio.PinCmd(report_scout).report.digital.reply
 			pinDStates = pinDTemp.state
 			new_motor = models.Motor(
-				name = request.form.get('deviceName') or 'Unnamed Device',
+				name = request.form.get('deviceName') or 'Unnamed Motor',
 				scout = scout,
 				troop = troop,
 				type = request.form.get('subset'),
+				mode = 1,
 				pin = pin,
 				trig_time = request.form.get('trigTime') or 1000,
 				untrig_time = request.form.get('untrigTime') or 1000,
@@ -138,6 +180,7 @@ def configform(troop, scout, pin):
 			print new_motor.scout
 			print new_motor.troop
 			print new_motor.type
+			print new_motor.mode
 			print new_motor.pin
 			print new_motor.trig_time
 			print new_motor.untrig_time
@@ -145,13 +188,14 @@ def configform(troop, scout, pin):
 			print new_motor.state
 			print new_motor.device_id
 			db.session.add(new_motor)
-			if current_device:
-				db.session.delete(current_device)
-			if current_motor:
-				db.session.delete(current_motor)
-			db.session.commit()
+
 		else:
-			print "ERROR"
+			print "ERROR"				# TODO
+		if current_device:
+			db.session.delete(current_device)
+		if current_motor:
+			db.session.delete(current_motor)
+		db.session.commit()
 		return redirect(url_for('config'))
 
 	else:
