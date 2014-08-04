@@ -64,6 +64,7 @@ def config():
 			for pinNum in range(0, 8):
 				pinName = 'A'+`pinNum`
 				device = models.Device.query.filter_by(pin=pinName, troop=troop.id, scout=scout.id).first()
+				motor = models.Motor.query.filter_by(pin=pinName, troop=troop.id, scout=scout.id).first()
 				if pinAModes[pinNum] < 0 or (not device and not motor):
 					pins[pinName] = {'pin':pinName, 'power':'INACTIVE', 'device':None, 'mode': None}
 				elif pinAModes[pinNum] == 0 or pinAModes[pinNum] == 2:
@@ -109,7 +110,7 @@ def configform(troop, scout, pin):
 				while isinstance(pinDTemp, str):
 					pinDTemp = pynoccio.PinCmd(report_scout).report.digital.reply
 				pinDStates = pinDTemp.state
-				
+
 			else:
 				print "ERROR"
 
@@ -143,12 +144,12 @@ def configform(troop, scout, pin):
 			print new_motor.delay
 			print new_motor.state
 			print new_motor.device_id
-			#db.session.add(new_motor)
-			#if current_device:
-			#	db.session.delete(current_device)
-			#if current_motor:
-			#	db.session.delete(current_motor)
-			#db.session.commit()
+			db.session.add(new_motor)
+			if current_device:
+				db.session.delete(current_device)
+			if current_motor:
+				db.session.delete(current_motor)
+			db.session.commit()
 		else:
 			print "ERROR"
 		return redirect(url_for('config'))
