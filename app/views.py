@@ -120,8 +120,10 @@ def configform(troop, scout, pin):
 			else:
 				print "ERROR"			# TODO: Gracefully exit
 
+			# TODO: Flash warning if pin STATE is disabled
+
 			output_settings = request.form.get('triggerDevice')
-			pynoccio.PinCmd(report_scout).makeoutput(pin)
+			pynoccio.PinCmd(report_scout).makeinputup(pin)
 			threshold_values = request.form.get('threshold').split("-")
 			threshold_values = [int(element) for element in threshold_values]
 			new_device = models.Device(
@@ -139,7 +141,7 @@ def configform(troop, scout, pin):
 				text = True if output_settings == 'text' else False,
 				email = True if output_settings == 'email' else False,
 				tweet = True if output_settings == 'tweet' else False,
-				motor = []				# TODO: Add handling to form
+				motor = int(output_settings) if (output_settings != 'text' and output_settings != 'email' and output_settings != 'tweet') else []
 			)
 			print new_device.name
 			print new_device.scout
@@ -156,7 +158,10 @@ def configform(troop, scout, pin):
 			print new_device.email
 			print new_device.tweet
 			print new_device.motor
+
 			db.session.add(new_device)
+			out_motor = models.Motor.query.get(output_settings)
+			out_motor.device_id = models.Device.query.filter_by(troop=troop, scout=scout, pin=pin).first().id
 
 		# If the user chose to add an output motor
 		elif request.form.get('deviceClass') == 'outputs':
@@ -166,7 +171,9 @@ def configform(troop, scout, pin):
 			while isinstance(pinDTemp, str):
 				pinDTemp = pynoccio.PinCmd(report_scout).report.digital.reply
 			pinDStates = pinDTemp.state
-			pynoccio.PinCmd(report_scout).makeinputup(pin)
+			# TODO: Flash warning if pin STATE is disabled
+
+			pynoccio.PinCmd(report_scout).makeoutput(pin)
 			new_motor = models.Motor(
 				name = request.form.get('deviceName') or 'Unnamed Motor',
 				scout = scout,
@@ -177,7 +184,7 @@ def configform(troop, scout, pin):
 				trig_time = request.form.get('trigTime') or 1000,
 				untrig_time = request.form.get('untrigTime') or 1000,
 				delay = request.form.get('delay') or None,
-				state = pinDStates[int(pin[1])-2] or None,
+				state = 0,
 				device_id = None
 			)
 			print new_motor.name
@@ -191,6 +198,7 @@ def configform(troop, scout, pin):
 			print new_motor.delay
 			print new_motor.state
 			print new_motor.device_id
+
 			db.session.add(new_motor)
 
 		else:
@@ -203,7 +211,14 @@ def configform(troop, scout, pin):
 		return redirect(url_for('config'))
 
 	else:
-		return render_template('configform.html', title = 'Device Configuration')
+		motorSet = models.Motor.query.all();
+		motors = []
+		for motor in motorSet:
+			motors.append( {motor.name : motor.id} )
+		motors = sorted(motors)
+
+		return render_template('configform.html', title = 'Device Configuration'
+			, motors = motors)
 
 # ======================================================================
 # Page to configure email, text and twitter settings

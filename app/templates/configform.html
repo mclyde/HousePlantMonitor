@@ -82,7 +82,11 @@
 							<option value='email' selected='selected'>Email</option>
 							<option value='text'>Text Message</option>
 							<option value='tweet'>Tweet</option>
-							<!-- TODO: Add handling for motor outputs -->
+							{% for motor in motors %}
+							{% for key,value in motor.items() %}
+							<option value='{{ value }}'>{{ key }}</option>
+							{% endfor %}
+							{% endfor %}
 						</select>
 					</div>
 				</div>
