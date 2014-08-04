@@ -123,8 +123,8 @@ def configform(troop, scout, pin):
 			output_settings = request.form.get('triggerDevice')
 			new_device = models.Device(
 				name = request.form.get('deviceName') or 'Unnamed Sensor',
-				troop = scout,
-				scout = troop,
+				troop = troop,
+				scout = scout,
 				type = request.form.get('subset'),
 				mode = 2,				# TODO
 				pin = pin,
