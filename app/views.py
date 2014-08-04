@@ -109,7 +109,6 @@ def configform(troop, scout, pin):
 					pinATemp = pynoccio.PinCmd(report_scout).report.analog.reply
 				pinAStates = pinATemp.state
 				digital = False
-				
 
 			elif pin in DIGITAL_PINS:
 				pinDTemp = pynoccio.PinCmd(report_scout).report.digital.reply
