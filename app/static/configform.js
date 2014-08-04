@@ -3,7 +3,6 @@
  * Licensed under GPL v2 (https://github.com/mclyde/HousePlantMonitor/blob/master/LICENSE)
  * ===================================================================================== */
 
-
 var pinType = getPinClass();
 
 var inputs = [
@@ -29,7 +28,7 @@ function getPinClass() {
 		return pinArr[0];
 }
 
-$(function () {
+$(function() {
 	$('#inputMode').hide();
 	$('#outputMode').hide();
 	$('#submitbutton').hide();
@@ -84,5 +83,5 @@ function list(arr) {
 	$('.subset').html("");
 	$(arr).each(function(i) {
 		$('.subset').append("<option value=\"" + arr[i].value + "\">" + arr[i].display + "</option>");
-	});
+});
 

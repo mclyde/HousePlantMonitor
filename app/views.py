@@ -207,6 +207,7 @@ def configform(troop, scout, pin):
 
 		else:
 			print "ERROR"				# TODO: Gracefully exit
+
 		if current_device:
 			db.session.delete(current_device)
 		if current_motor:
