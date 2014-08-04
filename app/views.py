@@ -13,6 +13,7 @@ import emails
 import texts
 import tweets
 import sqlite3
+import tasks
 
 ANALOG_PINS = ['A0', 'A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7']
 DIGITAL_PINS = ['D2', 'D3', 'D4', 'D5', 'D6', 'D7', 'D8']
@@ -119,6 +120,10 @@ def configform(troop, scout, pin):
 
 			else:
 				print "ERROR"			# TODO
+                
+			threshold = request.form.get("threshold").split('-')
+			lower = threshold[0].strip()
+			upper = threshold[1].strip()
 
 			output_settings = request.form.get('triggerDevice')
 			new_device = models.Device(
@@ -130,9 +135,9 @@ def configform(troop, scout, pin):
 				pin = pin,
 				digital = digital,
 				dtrigger = 'HIGH',		# TODO
-				atriggerupper = request.form.get('threshold[0]') or 1023,	# TODO
-				atriggerlower = request.form.get('threshold[1]') or 0,		# TODO
-				pollinginterval = 15,	# TODO
+				atriggerupper = upper or 1023,	# TODO
+				atriggerlower = lower or 0,		# TODO
+				pollinginterval = request.form.get('polling'),	# TODO
 				text = True if output_settings == 'text' else False,
 				email = True if output_settings == 'email' else False,
 				tweet = True if output_settings == 'tweet' else False,
@@ -153,6 +158,7 @@ def configform(troop, scout, pin):
 			print new_device.email
 			print new_device.tweet
 			print new_device.motor
+            #print request.form.get('amount')
 			db.session.add(new_device)
 
 		# If the user chose to add an output motor
@@ -250,3 +256,23 @@ def readings():
     return render_template("readings.html", title = 'Current Readings')
 
 
+# ======================================================================
+# Make task start command available to clientside
+# ======================================================================
+@app.route('/startMonitoring', methods=['GET'])
+def startMonitoring():
+    tasks.setup()
+    return Response("", status=200)
+
+# ======================================================================
+# Make task stop command available to clientside
+# ======================================================================
+@app.route('/stopMonitoring', methods=['GET'])
+def stopMonitoring():
+    try:
+        stopped = tasks.stop()
+        if stopped:
+            return Response("", status=200)
+    except Exception:
+        pass
+    return Response("", status=200)

@@ -33,32 +33,32 @@ def monitor(device):
 	while True and not exitFlag:
 		time.sleep(device.pollinginterval)
 
-		print "Device %s says hi I'm checking the status of pin %s right now" % (device.id, device.pin)
-		#reading = get_reading(device.troop, device.scout, device.pin)
+		reading = get_reading(device.troop, device.scout, device.pin)
 
-		#if reading < device.atriggerlower or reading > device.atriggerupper:
-# Eventually want to send out message
-		if device.text:
-			print "send a text!\n"
-			#texts.send_notification()
+		print "Reading %s from device %s lower: %s upper: %s" % (reading, device.pin, device.atriggerlower, device.atriggerupper)
+		if reading < device.atriggerlower or reading > device.atriggerupper:
+			# Eventually want to send out message
+			if device.text:
+				print "send a text!\n"
+				#texts.send_notification()
 
-		if device.email:
-			print "send an email!\n"
-			#emails.send_notification()
+			if device.email:
+				print "send an email!\n"
+				#emails.send_notification()
 
-		if device.tweet:
-			print "send a tweet!\n"
-			#tweets.send_tweet()
+			if device.tweet:
+				print "send a tweet!\n"
+				#tweets.send_tweet()
+			
+			#if device.motor is not None:
+			#	motor = Motor.query.filter_by(id=device.motor).get(1)
+				#motor.state = (not motor.state)
+				#db.session.commit()
+			#	t = ActionThread(motor)
+			#	threads.append(t)
 		
-		if device.motor is not None:
-			motor = Motor.query.filter_by(id=device.motor).get(1)
-			#motor.state = (not motor.state)
-			#db.session.commit()
-			t = ActionThread(motor)
-			threads.append(t)
-		
 
-	thread.exit()
+	#thread.exit()
 
 
 def action(motor):
@@ -77,13 +77,14 @@ def setup():
 	exitFlag = 1
 	devices = Device.query.all()
 	for d in devices:
-		t = MonitorThread(device)
+		t = MonitorThread(d)
 		threads.append(t)
 	start()
 
 
 def start():
 	global threads, exitFlag
+	time.sleep(2)
 	exitFlag = 0
 	for thread in threads:
 		thread.start()
@@ -91,7 +92,6 @@ def start():
 
 def stop():
 	global threads, exitFlag
-	print "Stopping EVERYTHING!"
 	if threads is not []:
 		exitFlag = 1
 		for thread in threads:
@@ -103,17 +103,17 @@ def stop():
 
 
 
-def get_reading(troopid, scoutid, pin, digital):
+def get_reading(troopid, scoutid, pin):
 	account = pynoccio.Account()
 	account.token = app.config['SECURITY_TOKEN']
 
 	account.load_troops()
         
 	for t in account.troops:
-		if t.id == troop:
+		if t.id == troopid:
 			for s in t.scouts:
 				if s.id == scoutid:
 				# might have to do a loop till we get a valid reading?
-					reading = pynoccio.PinCmd(s).read(pin)
-					return reading #.reply??
+					reading = pynoccio.PinCmd(s).read(pin.lower())
+					return reading.reply #.reply??
 
