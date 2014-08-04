@@ -35,7 +35,7 @@
 				<ul>
 					{% for key,value in troopPins[troop.name][scout.name].items() %}
 						<li>
-							<span id="pin">{{ value['pin'] }} </span>
+							<span id="pin" name="pin">{{ value['pin'] }} </span>
 						{% if value['power'] == 'ACTIVE' %}
 							<span id="power" class="label label-success">{{ value['power'] }} </span>
 							{% if value['mode'] == 'INPUT' %}
@@ -47,7 +47,7 @@
 						{% else %}
 							<span id="power" class="label label-danger">{{ value['power'] }} </span>
 						{% endif %}
-							<a href='/configform' class="btn btn-default">Configure</a>
+							<a href='/configform/{{ troop.id }}/{{ scout.id }}/{{ value["pin"] }}' class="btn btn-default">Configure</a>
 						</li>
 					{% endfor %}
 				</ul>

@@ -14,23 +14,22 @@ import texts
 import tweets
 import sqlite3
 
+ANALOG_PINS = ['A0', 'A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7']
+DIGITAL_PINS = ['D2', 'D3', 'D4', 'D5', 'D6', 'D7', 'D8']
+
 @app.route('/')
 @app.route('/index')
 def index():
     return render_template("index.html", title = 'Home')
 
-@app.route('/config', methods=['GET', 'POST'])
+# ======================================================================
+# Page to display all pins and their current states
+# ======================================================================
+@app.route('/config', methods=['GET'])
 def config():
 	account = pynoccio.Account()
 	account.token = app.config['SECURITY_TOKEN']
 	account.load_troops()
-
-	if request.method == 'POST':
-		if request.form['deviceClass'] == 'outputs':
-			print 'hi'
-
-	devices = models.Device.query.all()
-	motors = models.Motor.query.all()
 
 	troopPins = {}
 	scoutPins = {}
@@ -49,6 +48,7 @@ def config():
 			pinAModes = pinATemp.mode
 			# End handling
 
+			# Collect all digital pins for the scout
 			for pinNum in range(0, 7):
 				pinName = 'D'+`pinNum+2`
 				device = models.Device.query.filter_by(pin=pinName, troop=troop.id, scout=scout.id).first()
@@ -59,6 +59,8 @@ def config():
 					pins[pinName] = {'pin':pinName, 'power':'ACTIVE', 'device':device.name, 'mode':'INPUT'}
 				elif pinDModes[pinNum] == 1:
 					pins[pinName] = {'pin':pinName, 'power':'ACTIVE', 'device':motor.name, 'mode':'OUTPUT'}
+
+			# Collect all analog pins for the scout
 			for pinNum in range(0, 8):
 				pinName = 'A'+`pinNum`
 				device = models.Device.query.filter_by(pin=pinName, troop=troop.id, scout=scout.id).first()
@@ -76,12 +78,87 @@ def config():
 	return render_template("config.html", title = 'Sensor Configuration', troopPins = troopPins
 		, troops = account.troops)
 
-@app.route('/configform', methods=['GET', 'POST'])
-def configform():
+# ======================================================================
+# Configuration form for adding or changing a device or motor
+# ======================================================================
+@app.route('/configform/<troop>/<scout>/<pin>', methods=['GET', 'POST'])
+def configform(troop, scout, pin):
 	if request.method == 'POST':
-		return redirect(url_for('config'))
-	return render_template('configform.html', title = 'Device Configuration')
 
+		# Prepare scout object for Pinoccio API query
+		account = pynoccio.Account()
+		account.token = app.config['SECURITY_TOKEN']
+		account.load_troops()
+		account.troop(int(troop)).load_scouts()
+		report_scout = account.troop(int(troop)).scout(int(scout))
+
+		# Check DB for pin's previous device, if any
+		current_device = models.Device.query.filter_by(troop=troop, scout=scout, pin=pin).first()
+		current_motor = models.Motor.query.filter_by(troop=troop, scout=scout, pin=pin).first()
+
+		# If the user chose to add an input device
+		if request.form.get('deviceClass') == 'inputs':
+			if pin in ANALOG_PINS:
+				pinATemp = pynoccio.PinCmd(report_scout).report.analog.reply
+				while isinstance(pinATemp, str):
+					pinATemp = pynoccio.PinCmd(report_scout).report.analog.reply
+				pinAStates = pinATemp.state
+
+			if pin in DIGITAL_PINS:
+				pinDTemp = pynoccio.PinCmd(report_scout).report.digital.reply
+				while isinstance(pinDTemp, str):
+					pinDTemp = pynoccio.PinCmd(report_scout).report.digital.reply
+				pinDStates = pinDTemp.state
+				
+			else:
+				print "ERROR"
+
+		# If the user chose to add an output motor
+		elif request.form.get('deviceClass') == 'outputs':
+
+			# Get current state of new motor
+			pinDTemp = pynoccio.PinCmd(report_scout).report.digital.reply
+			while isinstance(pinDTemp, str):
+				pinDTemp = pynoccio.PinCmd(report_scout).report.digital.reply
+			pinDStates = pinDTemp.state
+			new_motor = models.Motor(
+				name = request.form.get('deviceName') or 'Unnamed Device',
+				scout = scout,
+				troop = troop,
+				type = request.form.get('subset'),
+				pin = pin,
+				trig_time = request.form.get('trigTime') or 1000,
+				untrig_time = request.form.get('untrigTime') or 1000,
+				delay = request.form.get('delay') or None,
+				state = pinDStates[int(pin[1])-2] or None,
+				device_id = None
+			)
+			print new_motor.name
+			print new_motor.scout
+			print new_motor.troop
+			print new_motor.type
+			print new_motor.pin
+			print new_motor.trig_time
+			print new_motor.untrig_time
+			print new_motor.delay
+			print new_motor.state
+			print new_motor.device_id
+			#db.session.add(new_motor)
+			#if current_device:
+			#	db.session.delete(current_device)
+			#if current_motor:
+			#	db.session.delete(current_motor)
+			#db.session.commit()
+		else:
+			print "ERROR"
+		return redirect(url_for('config'))
+
+	else:
+		return render_template('configform.html', title = 'Device Configuration')
+
+# ======================================================================
+# Page to configure email, text and twitter settings
+# ======================================================================
 @app.route('/communications', methods=['GET', 'POST'])
 def communications():
     form = CommunicationsForm()
@@ -108,6 +185,9 @@ def communications():
 
     return render_template('communications.html', title = 'Communication Settings', form=form)
 
+# ======================================================================
+# Displays current readings of all input devices
+# ======================================================================
 @app.route('/readings')
 def readings():
     account = pynoccio.Account()
@@ -124,14 +204,4 @@ def readings():
 
     return render_template("readings.html", title = 'Current Readings')
 
-@app.route('/show_scouts/')
-def show_scouts():
-    
-    account = pynoccio.Account()
-
-    account.token = app.config['SECURITY_TOKEN']
-
-    account.load_troops()
-
-    return render_template('scouts.html', title = 'Scouts Connected', troops = account.troops)
 
