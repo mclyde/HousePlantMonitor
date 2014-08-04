@@ -126,6 +126,11 @@ def configform(troop, scout, pin):
 			pynoccio.PinCmd(report_scout).makeinputup(pin)
 			threshold_values = request.form.get('threshold').split("-")
 			threshold_values = [int(element) for element in threshold_values]
+
+			ref_motor = []
+			if (output_settings != 'text' and output_settings != 'email' and output_settings != 'tweet'):
+				ref_motor = [models.Motor.query.get(int(output_settings))]
+
 			new_device = models.Device(
 				name = request.form.get('deviceName') or 'Unnamed Sensor',
 				troop = troop,
@@ -141,7 +146,7 @@ def configform(troop, scout, pin):
 				text = True if output_settings == 'text' else False,
 				email = True if output_settings == 'email' else False,
 				tweet = True if output_settings == 'tweet' else False,
-				motor = int(output_settings) if (output_settings != 'text' and output_settings != 'email' and output_settings != 'tweet') else []
+				motor = ref_motor
 			)
 			print new_device.name
 			print new_device.scout
@@ -160,8 +165,8 @@ def configform(troop, scout, pin):
 			print new_device.motor
 
 			db.session.add(new_device)
-			out_motor = models.Motor.query.get(output_settings)
-			out_motor.device_id = models.Device.query.filter_by(troop=troop, scout=scout, pin=pin).first().id
+			#out_motor = models.Motor.query.get(int(output_settings))
+			#out_motor.device_id = models.Device.query.filter_by(troop=troop, scout=scout, pin=pin).first().id
 
 		# If the user chose to add an output motor
 		elif request.form.get('deviceClass') == 'outputs':
