@@ -119,17 +119,9 @@ def configform(troop, scout, pin):
 				digital = True
 
 			else:
-<<<<<<< HEAD
 				print "ERROR"			# TODO: Gracefully exit
 
 			# TODO: Flash warning if pin STATE is disabled
-=======
-				print "ERROR"			# TODO
-                
-			threshold = request.form.get("threshold").split('-')
-			lower = threshold[0].strip()
-			upper = threshold[1].strip()
->>>>>>> b6ebdf19c9f59ad2a3b8297359956b7543f82fb6
 
 			output_settings = request.form.get('triggerDevice')
 			pynoccio.PinCmd(report_scout).makeinputup(pin)
@@ -148,17 +140,10 @@ def configform(troop, scout, pin):
 				mode = 2,
 				pin = pin,
 				digital = digital,
-<<<<<<< HEAD
 				dtrigger = request.form.get('dtrigger') or 'HIGH',
 				atriggerupper = threshold_values[1] or 1023,
 				atriggerlower = threshold_values[0] or 0,
 				pollinginterval = request.form.get('pollingInterval') or 15,
-=======
-				dtrigger = 'HIGH',		# TODO
-				atriggerupper = upper or 1023,	# TODO
-				atriggerlower = lower or 0,		# TODO
-				pollinginterval = request.form.get('polling'),	# TODO
->>>>>>> b6ebdf19c9f59ad2a3b8297359956b7543f82fb6
 				text = True if output_settings == 'text' else False,
 				email = True if output_settings == 'email' else False,
 				tweet = True if output_settings == 'tweet' else False,
@@ -179,14 +164,8 @@ def configform(troop, scout, pin):
 			print new_device.email
 			print new_device.tweet
 			print new_device.motor
-<<<<<<< HEAD
 
-=======
-            #print request.form.get('amount')
->>>>>>> b6ebdf19c9f59ad2a3b8297359956b7543f82fb6
 			db.session.add(new_device)
-			#out_motor = models.Motor.query.get(int(output_settings))
-			#out_motor.device_id = models.Device.query.filter_by(troop=troop, scout=scout, pin=pin).first().id
 
 		# If the user chose to add an output motor
 		elif request.form.get('deviceClass') == 'outputs':
