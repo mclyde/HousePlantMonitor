@@ -3,6 +3,8 @@
  * Licensed under GPL v2 (https://github.com/mclyde/HousePlantMonitor/blob/master/LICENSE)
  * ===================================================================================== */
 
+var pinType = getPinClass();
+
 var inputs = [
 	{display:'Photometer', value:'light'},
 	{display:'Soil Monitor', value:'soil'},
@@ -19,6 +21,13 @@ var defaults = [
 	{display:'---', value:''}
 ]
 
+function getPinClass() {
+		var path = window.location.pathname.toString().split('/');
+		var pin = path[path.length - 1];
+		var pinArr = pin.split('');
+		return pinArr[0];
+}
+
 $(function () {
 	$('#inputMode').hide();
 	$('#outputMode').hide();
@@ -31,6 +40,15 @@ $(document).on('change', 'select.deviceClass', function() {
 			list(inputs);
 			$('#outputMode').hide();
 			$('#inputMode').show();
+			console.log(pinType);
+			if(pinType == 'A') {
+				$('#analog').show();
+				$('#digital').hide();
+			}
+			else {
+				$('#analog').hide();
+				$('#digital').show();
+			}
 			$('#submitbutton').show();
 			break;
 		case 'outputs':

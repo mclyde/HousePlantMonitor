@@ -62,6 +62,19 @@ li {
 	margin-top: 8px;
 }
 
+#dtriggerRadio {
+	margin-top: 8px;
+}
+
+#lowradio {
+	margin-left: 2em;
+}
+
+.dRadio {
+	width: 1.5em;
+	display: inline-block;
+}
+
 .label-success {
 	background-color: #2CF289;
 	border-color: rgb(0, 216, 32);

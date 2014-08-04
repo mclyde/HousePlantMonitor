@@ -52,7 +52,7 @@
 				</div>
 			</div>
 			<span id='inputMode' class='inputMode'>
-				<div class='form-group'>
+				<div class='form-group' id='analog'>
 					<label for="amount" class='control-label col-xs-3'>Threshold:</label>
 					<div id="slider-range" class='col-xs-5'></div>
 					<script>
@@ -68,6 +68,13 @@
 					</script>
 					<input type="text" id="amount" class='col-xs-2' name='threshold' readonly>
 				</div>
+				<div class='form-group' id='digital'>
+					<label class='control-label col-xs-3'>Digital Trigger:</label>
+					<div class='col-xs-8' id='dtriggerRadio'>
+						<input type='radio' class='dRadio' id='highradio' name='dtrigger' value='HIGH'>HIGH</input>
+						<input type='radio' class='dRadio' id='lowradio' name='dtrigger' value='LOW'>LOW</input>
+					</div>
+				</div>
 				<div class='form-group'>
 					<label id='outputMethod' for='outputMethod' class='control-label col-xs-3'>Trigger:</label>
 					<div class='col-xs-8 dropdown'>
@@ -77,6 +84,12 @@
 							<option value='tweet'>Tweet</option>
 							<!-- TODO: Add handling for motor outputs -->
 						</select>
+					</div>
+				</div>
+				<div class='form-group'>
+					<label id='nameLabel' for='inputName' class='control-label col-xs-3'>Polling Interval:</label>
+					<div class='col-xs-5'>
+						<input type='text' class='form-control' id='pollingInterval' name='pollingInterval' placeholder='Enter how often the system should read the device (minutes)'>
 					</div>
 				</div>
 			</span>

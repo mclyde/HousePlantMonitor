@@ -40,7 +40,7 @@ def config():
 			# Handle inconsistent returns from Pinoccio API
 			pinDTemp = pynoccio.PinCmd(scout).report.digital.reply
 			while isinstance(pinDTemp, str):
-				pinDTemp = pynoccio.PinCmd(scout).report.digital.reply	# get array of ints
+				pinDTemp = pynoccio.PinCmd(scout).report.digital.reply
 			pinDModes = pinDTemp.mode
 			pinATemp = pynoccio.PinCmd(scout).report.analog.reply
 			while isinstance(pinATemp, str):
@@ -132,10 +132,10 @@ def configform(troop, scout, pin):
 				mode = 2,
 				pin = pin,
 				digital = digital,
-				dtrigger = 'HIGH',		# TODO: Add this option to form
+				dtrigger = request.form.get('dtrigger') or 'HIGH',
 				atriggerupper = threshold_values[1] or 1023,
 				atriggerlower = threshold_values[0] or 0,
-				pollinginterval = 15,	# TODO: Add this option to form
+				pollinginterval = request.form.get('pollingInterval') or 15,
 				text = True if output_settings == 'text' else False,
 				email = True if output_settings == 'email' else False,
 				tweet = True if output_settings == 'tweet' else False,
