@@ -28,6 +28,9 @@
 <div class="jumbotron">
 	<div class="container">
     <h1>{{title}}</h1>
+    <button id="startbutton" type="button" class="btn btn-success" onclick="startMonitoring()" data-loading-text="Starting...">Start Monitoring</button>
+    <button id="stopbutton" type="button" class="btn btn-danger" onclick="stopMonitoring()" data-loading-text="Stopping...">Stop Monitoring</button>
+
 		{% for troop in troops %}
 			<h2>{{troop.name}}</h2>
 			{% for scout in troop.scouts %}

@@ -3,6 +3,7 @@
  * Licensed under GPL v2 (https://github.com/mclyde/HousePlantMonitor/blob/master/LICENSE)
  * ===================================================================================== */
 
+
 var pinType = getPinClass();
 
 var inputs = [
@@ -40,7 +41,6 @@ $(document).on('change', 'select.deviceClass', function() {
 			list(inputs);
 			$('#outputMode').hide();
 			$('#inputMode').show();
-			console.log(pinType);
 			if(pinType == 'A') {
 				$('#analog').show();
 				$('#digital').hide();
@@ -85,8 +85,4 @@ function list(arr) {
 	$(arr).each(function(i) {
 		$('.subset').append("<option value=\"" + arr[i].value + "\">" + arr[i].display + "</option>");
 	});
-}
-
-
-
 
