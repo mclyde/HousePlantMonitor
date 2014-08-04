@@ -13,7 +13,7 @@ Pinoccio API (https://docs.pinocc.io/)
 
 Pynoccio (https://github.com/drogge/Pynoccio)
 
-JQuery (jquery.org/license)
+JQuery (http://jquery.org/license)
 
 Bootstrap (https://github.com/twbs/bootstrap/blob/master/LICENSE)
 

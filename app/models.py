@@ -54,7 +54,8 @@ class Motor(db.Model):
 	scout = db.Column(db.Integer, index = True)
 	troop = db.Column(db.Integer, index = True)
 	type = db.Column(db.Text, index = True)
-	pin = db.Column(db.String(2))
+	mode = db.Column(db.Integer)
+	pin = db.Column(db.String(2))					# -1 DISABLED 0 INPUT, 1 OUTPUT, 2 INPUT_PULLUP
 	trig_time = db.Column(db.Integer)				# milliseconds
 	untrig_time = db.Column(db.Integer)				# milliseconds
 	delay = db.Column(db.Integer)					# seconds
@@ -64,12 +65,4 @@ class Motor(db.Model):
 	def __repr__(self):
 		return '<Motor %r>' % (self.name)
 
-class Soil():
-	type = 'soil'
-	def __init__(self, name, pin, troop, scout, mode):
-		self.name = name
-		self.pin = pin
-		self.troop = troop
-		self.scout = scout
-		self.mode = mode
-
+		

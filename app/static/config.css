@@ -41,6 +41,27 @@ li {
 	margin: 8px;
 }
 
+#device-class {
+	margin-top: 8px;
+}
+
+#subset {
+	margin-top: 8px;
+}
+
+#slider-range {
+	margin-top: 12px;
+}
+
+#amount {
+	margin-top: 6px;
+	margin-left: 8px;
+}
+
+#triggerDevice {
+	margin-top: 8px;
+}
+
 .label-success {
 	background-color: #2CF289;
 	border-color: rgb(0, 216, 32);
@@ -63,6 +84,11 @@ li {
 	background-color: #3ACCFC;
 	border-color: rgb(0, 216, 32);
 	box-shadow: rgb(102, 217, 255) 0px 0px 5px 2px;
+}
+
+.form-horizontal {
+	padding-top: 10px;
+	padding-bottom: 10px;
 }
 
 
