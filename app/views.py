@@ -109,6 +109,7 @@ def configform(troop, scout, pin):
 					pinATemp = pynoccio.PinCmd(report_scout).report.analog.reply
 				pinAStates = pinATemp.state
 				digital = False
+				
 
 			elif pin in DIGITAL_PINS:
 				pinDTemp = pynoccio.PinCmd(report_scout).report.digital.reply
@@ -118,25 +119,28 @@ def configform(troop, scout, pin):
 				digital = True
 
 			else:
-				print "ERROR"			# TODO
+				print "ERROR"			# TODO: Gracefully exit
 
 			output_settings = request.form.get('triggerDevice')
+			pynoccio.PinCmd(report_scout).makeoutput(pin)
+			threshold_values = request.form.get('threshold').split("-")
+			threshold_values = [int(element) for element in threshold_values]
 			new_device = models.Device(
 				name = request.form.get('deviceName') or 'Unnamed Sensor',
 				troop = troop,
 				scout = scout,
 				type = request.form.get('subset'),
-				mode = 2,				# TODO
+				mode = 2,
 				pin = pin,
 				digital = digital,
-				dtrigger = 'HIGH',		# TODO
-				atriggerupper = request.form.get('threshold[0]') or 1023,	# TODO
-				atriggerlower = request.form.get('threshold[1]') or 0,		# TODO
-				pollinginterval = 15,	# TODO
+				dtrigger = 'HIGH',		# TODO: Add this option to form
+				atriggerupper = threshold_values[1] or 1023,
+				atriggerlower = threshold_values[0] or 0,
+				pollinginterval = 15,	# TODO: Add this option to form
 				text = True if output_settings == 'text' else False,
 				email = True if output_settings == 'email' else False,
 				tweet = True if output_settings == 'tweet' else False,
-				motor = []				# TODO
+				motor = []				# TODO: Add handling to form
 			)
 			print new_device.name
 			print new_device.scout
@@ -163,6 +167,7 @@ def configform(troop, scout, pin):
 			while isinstance(pinDTemp, str):
 				pinDTemp = pynoccio.PinCmd(report_scout).report.digital.reply
 			pinDStates = pinDTemp.state
+			pynoccio.PinCmd(report_scout).makeinputup(pin)
 			new_motor = models.Motor(
 				name = request.form.get('deviceName') or 'Unnamed Motor',
 				scout = scout,
@@ -190,7 +195,7 @@ def configform(troop, scout, pin):
 			db.session.add(new_motor)
 
 		else:
-			print "ERROR"				# TODO
+			print "ERROR"				# TODO: Gracefully exit
 		if current_device:
 			db.session.delete(current_device)
 		if current_motor:
