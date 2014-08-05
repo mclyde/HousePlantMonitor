@@ -3,7 +3,6 @@
  * Licensed under GPL v2 (https://github.com/mclyde/HousePlantMonitor/blob/master/LICENSE)
  * ===================================================================================== */
 
-
 function startMonitoring() {
 	$("#startbutton").prop("disabled", true);
 	$("#stopbutton").prop("disabled", true);
@@ -39,3 +38,4 @@ function stopMonitoring() {
 		$("#stopbutton").prop("disabled", false);
 	});
 }
+

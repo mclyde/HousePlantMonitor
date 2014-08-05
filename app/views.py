@@ -41,7 +41,7 @@ def config():
 			# Handle inconsistent returns from Pinoccio API
 			pinDTemp = pynoccio.PinCmd(scout).report.digital.reply
 			while isinstance(pinDTemp, str):
-				pinDTemp = pynoccio.PinCmd(scout).report.digital.reply	# get array of ints
+				pinDTemp = pynoccio.PinCmd(scout).report.digital.reply
 			pinDModes = pinDTemp.mode
 			pinATemp = pynoccio.PinCmd(scout).report.analog.reply
 			while isinstance(pinATemp, str):
@@ -119,29 +119,35 @@ def configform(troop, scout, pin):
 				digital = True
 
 			else:
-				print "ERROR"			# TODO
-                
-			threshold = request.form.get("threshold").split('-')
-			lower = threshold[0].strip()
-			upper = threshold[1].strip()
+				print "ERROR"			# TODO: Gracefully exit
+
+			# TODO: Flash warning if pin STATE is disabled
 
 			output_settings = request.form.get('triggerDevice')
+			pynoccio.PinCmd(report_scout).makeinputup(pin)
+			threshold_values = request.form.get('threshold').split("-")
+			threshold_values = [int(element) for element in threshold_values]
+
+			ref_motor = []
+			if (output_settings != 'text' and output_settings != 'email' and output_settings != 'tweet'):
+				ref_motor = [models.Motor.query.get(int(output_settings))]
+
 			new_device = models.Device(
 				name = request.form.get('deviceName') or 'Unnamed Sensor',
 				troop = troop,
 				scout = scout,
 				type = request.form.get('subset'),
-				mode = 2,				# TODO
+				mode = 2,
 				pin = pin,
 				digital = digital,
-				dtrigger = 'HIGH',		# TODO
-				atriggerupper = upper or 1023,	# TODO
-				atriggerlower = lower or 0,		# TODO
-				pollinginterval = request.form.get('polling'),	# TODO
+				dtrigger = request.form.get('dtrigger') or 'HIGH',
+				atriggerupper = threshold_values[1] or 1023,
+				atriggerlower = threshold_values[0] or 0,
+				pollinginterval = request.form.get('pollingInterval') or 15,
 				text = True if output_settings == 'text' else False,
 				email = True if output_settings == 'email' else False,
 				tweet = True if output_settings == 'tweet' else False,
-				motor = []				# TODO
+				motor = ref_motor
 			)
 			print new_device.name
 			print new_device.scout
@@ -158,7 +164,7 @@ def configform(troop, scout, pin):
 			print new_device.email
 			print new_device.tweet
 			print new_device.motor
-            #print request.form.get('amount')
+
 			db.session.add(new_device)
 
 		# If the user chose to add an output motor
@@ -169,6 +175,9 @@ def configform(troop, scout, pin):
 			while isinstance(pinDTemp, str):
 				pinDTemp = pynoccio.PinCmd(report_scout).report.digital.reply
 			pinDStates = pinDTemp.state
+			# TODO: Flash warning if pin STATE is disabled
+
+			pynoccio.PinCmd(report_scout).makeoutput(pin)
 			new_motor = models.Motor(
 				name = request.form.get('deviceName') or 'Unnamed Motor',
 				scout = scout,
@@ -179,7 +188,7 @@ def configform(troop, scout, pin):
 				trig_time = request.form.get('trigTime') or 1000,
 				untrig_time = request.form.get('untrigTime') or 1000,
 				delay = request.form.get('delay') or None,
-				state = pinDStates[int(pin[1])-2] or None,
+				state = 0,
 				device_id = None
 			)
 			print new_motor.name
@@ -193,10 +202,12 @@ def configform(troop, scout, pin):
 			print new_motor.delay
 			print new_motor.state
 			print new_motor.device_id
+
 			db.session.add(new_motor)
 
 		else:
-			print "ERROR"				# TODO
+			print "ERROR"				# TODO: Gracefully exit
+
 		if current_device:
 			db.session.delete(current_device)
 		if current_motor:
@@ -205,7 +216,14 @@ def configform(troop, scout, pin):
 		return redirect(url_for('config'))
 
 	else:
-		return render_template('configform.html', title = 'Device Configuration')
+		motorSet = models.Motor.query.all();
+		motors = []
+		for motor in motorSet:
+			motors.append( {motor.name : motor.id} )
+		motors = sorted(motors)
+
+		return render_template('configform.html', title = 'Device Configuration'
+			, motors = motors)
 
 # ======================================================================
 # Page to configure email, text and twitter settings

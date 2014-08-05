@@ -3,6 +3,8 @@
  * Licensed under GPL v2 (https://github.com/mclyde/HousePlantMonitor/blob/master/LICENSE)
  * ===================================================================================== */
 
+var pinType = getPinClass();
+
 var inputs = [
 	{display:'Photometer', value:'light'},
 	{display:'Soil Monitor', value:'soil'},
@@ -17,9 +19,16 @@ var outputs = [
 ];
 var defaults = [
 	{display:'---', value:''}
-]
+];
 
-$(function () {
+function getPinClass() {
+		var path = window.location.pathname.toString().split('/');
+		var pin = path[path.length - 1];
+		var pinArr = pin.split('');
+		return pinArr[0];
+}
+
+$(function() {
 	$('#inputMode').hide();
 	$('#outputMode').hide();
 	$('#submitbutton').hide();
@@ -31,6 +40,14 @@ $(document).on('change', 'select.deviceClass', function() {
 			list(inputs);
 			$('#outputMode').hide();
 			$('#inputMode').show();
+			if(pinType == 'A') {
+				$('#analog').show();
+				$('#digital').hide();
+			}
+			else {
+				$('#analog').hide();
+				$('#digital').show();
+			}
 			$('#submitbutton').show();
 			break;
 		case 'outputs':
@@ -44,7 +61,6 @@ $(document).on('change', 'select.deviceClass', function() {
 			list(defaults);
 			$('#inputMode').hide();
 			$('#outputMode').hide();
-			$('#pollinginterval').show();
 			$('#submitbutton').hide();
 			break;
 	}
@@ -69,3 +85,4 @@ function list(arr) {
 		$('.subset').append("<option value=\"" + arr[i].value + "\">" + arr[i].display + "</option>");
 	});
 }
+
