@@ -176,6 +176,7 @@ def configform(troop, scout, pin):
 			while isinstance(pinDTemp, str):
 				pinDTemp = pynoccio.PinCmd(report_scout).report.digital.reply
 			pinDStates = pinDTemp.state
+
 			# TODO: Flash warning if pin STATE is disabled
 
 			pynoccio.PinCmd(report_scout).makeoutput(pin)
@@ -217,6 +218,8 @@ def configform(troop, scout, pin):
 		return redirect(url_for('config'))
 
 	else:
+
+		# Get all motors to populate dropdown
 		motorSet = models.Motor.query.all();
 		motors = []
 		for motor in motorSet:
