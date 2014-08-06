@@ -9,6 +9,7 @@ from flask import render_template, flash, url_for, redirect, Response, request, 
 from flask_bootstrap import Bootstrap
 from forms import CommunicationsForm, TelephoneForm
 from models import *
+from collections import OrderedDict
 import emails
 import texts
 import tweets
@@ -73,7 +74,7 @@ def config():
 				elif pinAModes[pinNum] == 1:
 					pins[pinName] = {'pin':pinName, 'power':'ACTIVE', 'device':motor.name, 'mode':'OUTPUT'}
 
-			scoutPins[scout.name] = pins
+			scoutPins[scout.name] = OrderedDict(sorted(pins.items(), key = lambda k: k[0]))
 			pins = {}
 		troopPins[troop.name] = scoutPins
 
