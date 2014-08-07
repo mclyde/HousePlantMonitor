@@ -40,6 +40,7 @@
 					{% for key,value in troopPins[troop.name][scout.name].items() %}
 						<li id="{{ value['pin'] }}-{{ scout.name }}-{{ troop.name }}">
 							<span id="pin" name="pin">{{ value['pin'] }} </span>
+							<a href='/configform/{{ troop.id }}/{{ scout.id }}/{{ value["pin"] }}' id="confbutton" class="btn btn-default">Configure</a>
 						{% if value['power'] == 'ACTIVE' %}
 							<span id="power1" class="label label-success">{{ value['power'] }} </span>
 							{% if value['mode'] == 'INPUT' %}
@@ -51,7 +52,6 @@
 						{% else %}
 							<span id="power2" class="label label-danger">{{ value['power'] }} </span>
 						{% endif %}
-							<a href='/configform/{{ troop.id }}/{{ scout.id }}/{{ value["pin"] }}' id="confbutton" class="btn btn-default">Configure</a>
 						</li>
 					{% endfor %}
 				</ul>
