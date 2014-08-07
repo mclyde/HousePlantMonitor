@@ -86,3 +86,17 @@ function list(arr) {
 	});
 }
 
+$(function () {
+    $("[data-toggle='popover']").popover({	container:'body',
+    										html:'true',
+    										placement:'bottom',
+    										trigger:'focus',
+    										title: function() {
+												return $('#popover-head').html();
+											},
+											content: function() {
+												return $('#popover-content').html();
+											}
+    									});   
+});
+

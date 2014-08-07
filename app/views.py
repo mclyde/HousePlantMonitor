@@ -9,11 +9,14 @@ from flask import render_template, flash, url_for, redirect, Response, request, 
 from flask_bootstrap import Bootstrap
 from forms import CommunicationsForm, TelephoneForm
 from models import *
+from collections import OrderedDict
+import json
 import emails
 import texts
 import tweets
 import sqlite3
 import tasks
+import status
 
 ANALOG_PINS = ['A0', 'A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7']
 DIGITAL_PINS = ['D2', 'D3', 'D4', 'D5', 'D6', 'D7', 'D8']
@@ -73,7 +76,7 @@ def config():
 				elif pinAModes[pinNum] == 1:
 					pins[pinName] = {'pin':pinName, 'power':'ACTIVE', 'device':motor.name, 'mode':'OUTPUT'}
 
-			scoutPins[scout.name] = pins
+			scoutPins[scout.name] = OrderedDict(sorted(pins.items(), key = lambda k: k[0]))
 			pins = {}
 		troopPins[troop.name] = scoutPins
 
@@ -85,16 +88,17 @@ def config():
 # ======================================================================
 @app.route('/configform/<troop>/<scout>/<pin>', methods=['GET', 'POST'])
 def configform(troop, scout, pin):
+
+	# Prepare scout object for Pinoccio API query
+	account = pynoccio.Account()
+	account.token = app.config['SECURITY_TOKEN']
+	account.load_troops()
+	account.troop(int(troop)).load_scouts()
+	report_scout = account.troop(int(troop)).scout(int(scout))
+
 	if request.method == 'POST':
 
 		# TODO: Add delete device/motor option
-
-		# Prepare scout object for Pinoccio API query
-		account = pynoccio.Account()
-		account.token = app.config['SECURITY_TOKEN']
-		account.load_troops()
-		account.troop(int(troop)).load_scouts()
-		report_scout = account.troop(int(troop)).scout(int(scout))
 
 		# Check DB for pin's previous device, if any
 		current_device = models.Device.query.filter_by(troop=troop, scout=scout, pin=pin).first()
@@ -175,6 +179,7 @@ def configform(troop, scout, pin):
 			while isinstance(pinDTemp, str):
 				pinDTemp = pynoccio.PinCmd(report_scout).report.digital.reply
 			pinDStates = pinDTemp.state
+
 			# TODO: Flash warning if pin STATE is disabled
 
 			pynoccio.PinCmd(report_scout).makeoutput(pin)
@@ -185,9 +190,9 @@ def configform(troop, scout, pin):
 				type = request.form.get('subset'),
 				mode = 1,
 				pin = pin,
-				trig_time = request.form.get('trigTime') or 1000,
-				untrig_time = request.form.get('untrigTime') or 1000,
-				delay = request.form.get('delay') or None,
+				trig_time = request.form.get('trigTime') or 0,
+				untrig_time = request.form.get('untrigTime') or 0,
+				delay = request.form.get('delay') or 0,
 				state = 0,
 				device_id = None
 			)
@@ -216,14 +221,20 @@ def configform(troop, scout, pin):
 		return redirect(url_for('config'))
 
 	else:
+
+		# Get all motors to populate dropdown
 		motorSet = models.Motor.query.all();
 		motors = []
 		for motor in motorSet:
 			motors.append( {motor.name : motor.id} )
 		motors = sorted(motors)
 
+		currentConfig = status.getStatus(troop, scout, pin)
+		pinloc = { 'troop':account.troop(int(troop)).name, 'scout':report_scout.name, 'pin':pin }
+		pindes = list(pin)[0]
+
 		return render_template('configform.html', title = 'Device Configuration'
-			, motors = motors)
+			, motors = motors, currentConfig = currentConfig, pinloc = pinloc, pindes = pindes)
 
 # ======================================================================
 # Page to configure email, text and twitter settings
@@ -252,7 +263,7 @@ def communications():
         form.mobile_phone.number.data = com.phone
         form.mobile_phone.carrier.data = com.carrier
 
-    return render_template('communications.html', title = 'Communication Settings', form=form)
+    return render_template('communications.html', title = 'Communication Settings', form = form)
 
 # ======================================================================
 # Displays current readings of all input devices
@@ -294,3 +305,5 @@ def stopMonitoring():
     except Exception:
         pass
     return Response("", status=200)
+
+
