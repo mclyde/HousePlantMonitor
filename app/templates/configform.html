@@ -29,13 +29,76 @@
 {% block content %}
 <div class="jumbotron">
 	<div class="container">
-		<h2>{{title}}</h2>
+		<h2>{{title}}:</h2>
+		<h3>{{pinloc['troop']}} - {{pinloc['scout']}} - {{pinloc['pin']}}</h3>
 		<form role='form' class='form-horizontal' id='config-form' method='POST'>
 			<input name=_csrf_token type=hidden value="{{ csrf_token() }}">
 			<div class='form-group'>
 				<label id='nameLabel' for='inputName' class='control-label col-xs-3'>Device Name:</label>
 				<div class='col-xs-5'>
 					<input type='text' class='form-control' id='deviceName' name='deviceName' placeholder='Enter a unique name for this device'>
+				</div>
+				<div class="control-label col-xs-2">
+				{% if currentConfig != {} %}
+					<button type="button" id="status" class="btn btn-default" data-container="body" data-html="true" data-toggle="popover" data-placement="bottom">Current Settings</button>
+					<div id="popover-content" style="display: none">
+						<label id="dynName" class="control-label col-xs-4">Name </label>
+						<label class="col-xs-1">|</label>
+						<label class="control-label col-xs-4">{{ currentConfig['name'] }}</label>
+						<br><br>
+						<label id="dynType" class="control-label col-xs-4">Device </label>
+						<label class="col-xs-1">|</label>
+						{% if currentConfig['type'] == 'light' %}
+						<label class="control-label col-xs-4">Photometer</label>
+						{% elif currentConfig['type'] == 'soil' %}
+						<label class="control-label col-xs-4">Soil Monitor</label>
+						{% elif currentConfig['type'] == 'temp' %}
+						<label class="control-label col-xs-4">Thermometer</label>
+						{% elif currentConfig['type'] == 'shade' %}
+						<label class="control-label col-xs-4">Motor: Shades</label>
+						{% elif currentConfig['type'] == 'water' %}
+						<label class="control-label col-xs-4">Motor: Water</label>
+						{% else %}
+						<label class="control-label col-xs-4">UNKNOWN</label>
+						{% endif %}
+						{% if currentConfig['this'] == 'device' %}
+							{% if pindes == 'A' %}
+							<br><br>
+							<label id="dynattrs" class="control-label col-xs-4">Upper Threshold </label>
+							<label class="col-xs-1">|</label>
+							<label class="control-label col-xs-4">{{ currentConfig['atriggerupper'] }}</label>
+							<br><br>
+							<label id="dynattrs" class="control-label col-xs-4">Lower Threshold </label>
+							<label class="col-xs-1">|</label>
+							<label class="control-label col-xs-4">{{ currentConfig['atriggerlower'] }}</label>
+							{% else %}
+							<br><br>
+							<label id="dynattrs" class="control-label col-xs-4">Digital Trigger </label>
+							<label class="col-xs-1">|</label>
+							<label class="control-label col-xs-4">{{ currentConfig['dtrigger'] }}</label>
+							{% endif %}
+							<br><br>
+							<label id="dynattrs" class="control-label col-xs-4">Polling Interval </label>
+							<label class="col-xs-1">|</label>
+							<label class="control-label col-xs-4">{{ currentConfig['pollinginterval'] }} minutes</label>
+						{% else %}
+						<br><br>
+						<label id="dynattrs" class="control-label col-xs-4">Trigger Time </label>
+						<label class="col-xs-1">|</label>
+						<label class="control-label col-xs-4">{{ currentConfig['trig_time'] }} ms</label>
+						<br><br>
+						<label id="dynattrs" class="control-label col-xs-4">Untrigger Time </label>
+						<label class="col-xs-1">|</label>
+						<label class="control-label col-xs-4">{{ currentConfig['untrig_time'] }} ms</label>
+						<br><br>
+							{% if currentConfig['type'] == 'water' %}
+							<label id="dynattrs" class="control-label col-xs-4">Delay </label>
+							<label class="col-xs-1">|</label>
+							<label class="control-label col-xs-4">{{ currentConfig['delay'] }} seconds</label>
+							{% endif %}
+						{% endif %}
+					</div>
+				{% endif %}
 				</div>
 			</div>
 			<div class='form-group'>

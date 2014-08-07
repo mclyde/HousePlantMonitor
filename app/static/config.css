@@ -61,7 +61,7 @@ li {
 
 #status {
 	margin-bottom: 4px;
-	background-color: #F0F4FF;
+	margin-top: -6px;
 }
 
 #configure {
@@ -98,6 +98,10 @@ li {
 	margin-left: 2em;
 }
 
+#dynattrs{
+
+}
+
 .dRadio {
 	width: 1.5em;
 	display: inline-block;
@@ -130,6 +134,11 @@ li {
 .form-horizontal {
 	padding-top: 10px;
 	padding-bottom: 10px;
+}
+
+.popover {
+	min-width: 600px;
+	white-space: nowrap
 }
 
 
