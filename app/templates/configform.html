@@ -190,6 +190,15 @@
 				</div>
 			</span>
 		</form>
+		<hr>
+		<div class="control-label col-xs-3"></div>
+		<div class="control-label col-xs-5"></div>
+		<div class="control-label col-xs-3" id="deletediv">
+		{% if currentConfig != {} %}
+			<button id="deletebutton" class="label btn-danger">DELETE DEVICE</button>
+			<div id="warnmsg">Warning: This action cannot be undone!</div>
+		{% endif %}
+		</div>
 	</div>
 </div>
 {% endblock %}

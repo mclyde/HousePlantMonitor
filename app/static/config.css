@@ -102,6 +102,18 @@ li {
 
 }
 
+#deletebutton {
+	padding-top: 8px;
+	padding-bottom: 8px;
+	font-size: 20px;
+}
+
+#warnmsg {
+	font: bold;
+	margin-top: 4px;
+	margin-left: -24px;
+}
+
 .dRadio {
 	width: 1.5em;
 	display: inline-block;
