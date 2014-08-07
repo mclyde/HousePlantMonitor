@@ -81,7 +81,7 @@ def config():
 		troopPins[troop.name] = scoutPins
 
 	return render_template("config.html", title = 'Sensor Configuration', troopPins = troopPins
-		, troops = account.troops, html="<a href=\'javascript:displayStatus(\"{{ troop.name }}\", \"{{ scout.name }}\", \"{{ value[\'pin\'] }}\");\'></a>")
+		, troops = account.troops)
 
 # ======================================================================
 # Configuration form for adding or changing a device or motor
