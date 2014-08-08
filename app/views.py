@@ -96,9 +96,8 @@ def configform(troop, scout, pin):
 	account.troop(int(troop)).load_scouts()
 	report_scout = account.troop(int(troop)).scout(int(scout))
 
-	if request.method == 'POST':
-
-		# TODO: Add delete device/motor option
+	# If Submit button was clicked
+	if request.method == 'POST' and request.form.get('formbtn') == 'save':
 
 		# Check DB for pin's previous device, if any
 		current_device = models.Device.query.filter_by(troop=troop, scout=scout, pin=pin).first()
@@ -123,19 +122,20 @@ def configform(troop, scout, pin):
 				digital = True
 
 			else:
-				print "ERROR"			# TODO: Gracefully exit
-
-			# TODO: Flash warning if pin STATE is disabled
+				print "ERROR: Invalid pin designation"
 
 			output_settings = request.form.get('triggerDevice')
-			pynoccio.PinCmd(report_scout).makeinputup(pin)
 			threshold_values = request.form.get('threshold').split("-")
-			threshold_values = [int(element) for element in threshold_values]
+			if threshold_values != ['']:
+				threshold_values = [int(element) for element in threshold_values]
+			else:
+				threshold_values =  [250, 750]
 
 			ref_motor = []
 			if (output_settings != 'text' and output_settings != 'email' and output_settings != 'tweet'):
 				ref_motor = [models.Motor.query.get(int(output_settings))]
 
+			pynoccio.PinCmd(report_scout).makeinput(pin)
 			new_device = models.Device(
 				name = request.form.get('deviceName') or 'Unnamed Sensor',
 				troop = troop,
@@ -180,8 +180,6 @@ def configform(troop, scout, pin):
 				pinDTemp = pynoccio.PinCmd(report_scout).report.digital.reply
 			pinDStates = pinDTemp.state
 
-			# TODO: Flash warning if pin STATE is disabled
-
 			pynoccio.PinCmd(report_scout).makeoutput(pin)
 			new_motor = models.Motor(
 				name = request.form.get('deviceName') or 'Unnamed Motor',
@@ -211,13 +209,26 @@ def configform(troop, scout, pin):
 			db.session.add(new_motor)
 
 		else:
-			print "ERROR"				# TODO: Gracefully exit
+			print "ERROR: Device not set to input or output"
 
 		if current_device:
 			db.session.delete(current_device)
 		if current_motor:
 			db.session.delete(current_motor)
 		db.session.commit()
+		return redirect(url_for('config'))
+
+	# If Delete button was clicked
+	elif request.method == 'POST' and request.form.get('formbtn') == 'delete':
+		current_device = models.Device.query.filter_by(troop=troop, scout=scout, pin=pin).first()
+		current_motor = models.Motor.query.filter_by(troop=troop, scout=scout, pin=pin).first()
+		pynoccio.PinCmd(report_scout).disable(pin)
+		if current_device:
+			db.session.delete(current_device)
+		if current_motor:
+			db.session.delete(current_motor)
+		db.session.commit()
+
 		return redirect(url_for('config'))
 
 	else:

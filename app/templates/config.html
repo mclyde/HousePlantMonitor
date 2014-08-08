@@ -17,7 +17,7 @@
 {% endblock %}
 
 {% block title %}
-	House Plant Monitor
+	House Plant Monitor - {{ title }}
 {% endblock %}
 
 {% block navbar %}
@@ -30,12 +30,13 @@
     <h1>{{title}}</h1>
     <button id="startbutton" type="button" class="btn btn-success" onclick="startMonitoring()" data-loading-text="Starting...">Start Monitoring</button>
     <button id="stopbutton" type="button" class="btn btn-danger" onclick="stopMonitoring()" data-loading-text="Stopping...">Stop Monitoring</button>
-
+    <hr>
 		{% for troop in troops %}
-			<h2>{{troop.name}}</h2>
+			<h2 id='trooptitle'>{{troop.name}}</h2>
 			{% for scout in troop.scouts %}
 				<div id="scoutpins">
-				<h3>{{scout.name}}</h3>
+				<h3><span id='scouttitle'>{{scout.name}}</span> <button id="scoutreport" class="label btn-primary" name='scoutreport' value="scoutreport" type="submit">Scout Report</button></h3>
+				<br>
 				<ul>
 					{% for key,value in troopPins[troop.name][scout.name].items() %}
 						<li id="{{ value['pin'] }}-{{ scout.name }}-{{ troop.name }}">
@@ -56,6 +57,7 @@
 					{% endfor %}
 				</ul>
 				</div>
+				<br>
 			{% endfor %}
 		{% endfor %}
 	</div>
