@@ -96,9 +96,8 @@ def configform(troop, scout, pin):
 	account.troop(int(troop)).load_scouts()
 	report_scout = account.troop(int(troop)).scout(int(scout))
 
-	if request.method == 'POST':
-
-		# TODO: Add delete device/motor option
+	# If Submit button was clicked
+	if request.method == 'POST' and request.form.get('formbtn') == 'save':
 
 		# Check DB for pin's previous device, if any
 		current_device = models.Device.query.filter_by(troop=troop, scout=scout, pin=pin).first()
@@ -207,13 +206,26 @@ def configform(troop, scout, pin):
 			db.session.add(new_motor)
 
 		else:
-			print "ERROR"				# TODO: Gracefully exit
+			print "ERROR 2"				# TODO: Gracefully exit
 
 		if current_device:
 			db.session.delete(current_device)
 		if current_motor:
 			db.session.delete(current_motor)
 		db.session.commit()
+		return redirect(url_for('config'))
+
+	# If Delete button was clicked
+	elif request.method == 'POST' and request.form.get('formbtn') == 'delete':
+		current_device = models.Device.query.filter_by(troop=troop, scout=scout, pin=pin).first()
+		current_motor = models.Motor.query.filter_by(troop=troop, scout=scout, pin=pin).first()
+		pynoccio.PinCmd(report_scout).disable(pin)
+		if current_device:
+			db.session.delete(current_device)
+		if current_motor:
+			db.session.delete(current_motor)
+		db.session.commit()
+
 		return redirect(url_for('config'))
 
 	else:

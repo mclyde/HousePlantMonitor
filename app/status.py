@@ -41,8 +41,6 @@ def getStatus(troop, scout, pin):
 					'delay':motor.delay,
 					'this':'motor'
 		}
-	else:
-		print "ERROR"			# TODO: Gracefully exit
 
 	return attrs
 
