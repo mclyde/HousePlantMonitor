@@ -43,6 +43,7 @@ class Device(db.Model):
 	text = db.Column(db.Boolean)					# 0 false 1 true
 	email = db.Column(db.Boolean)
 	tweet = db.Column(db.Boolean)
+	sentnotification = db.Column(db.Integer)		# 0 ok state, 1 low reading, 2 high reading
 	motor = db.relationship('Motor', backref = 'device') # id of Motor
 
 	def __repr__(self):

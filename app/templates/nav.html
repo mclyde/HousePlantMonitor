@@ -1,3 +1,9 @@
+  <!-- JavaScript -->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/jquery-ui.js"></script>
+  <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+  <script src="{{url_for('static',filename='nav.js')}}" type="text/javascript"></script>
+
 <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   <div class="container">
 
@@ -9,7 +15,11 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="{{ url_for('index') }}">Home</a>
+        <form class="navbar-form pull-left">
+          <a class="navbar-brand" href="/">Home</a>
+          <button id="startbutton" type="button" class="btn btn-success" onclick="startMonitoring()" data-loading-text="Starting...">Start Monitoring</button>
+        <button id="stopbutton" type="button" class="btn btn-danger" onclick="stopMonitoring()" data-loading-text="Stopping...">Stop Monitoring</button>
+        </form>
       </div>
      
     <!-- Collect the nav links, forms, and other content for toggling -->

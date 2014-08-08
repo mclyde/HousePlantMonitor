@@ -682,7 +682,7 @@ class PinCmd(SSCmd):
         return self.run('print pin.read("%s")' % pin)
 
     def write(self, pin, value):
-        return self.run('print pin.makeinput("%s", %s)' % (pin, value))
+        return self.run('print pin.write("%s", %s)' % (pin, value))
 
     def save(self, pin, mode, value=None):
 	cmd = 'pin.save("%s", %s' % (pin, mode)
@@ -1037,7 +1037,7 @@ class Account(object):
         """ Get a list of all the troops associated with the pinoccio account. """
         self.troops = [] # No Troops for you!
         r = requests.get(_api_url+'troops', data={'token':self.token})
-        print r
+        #print r
         if r.status_code == 200:
             for t in r.json()['data']:
                 self.troops.append(self.make_Troop(t))
