@@ -161,6 +161,7 @@
 				</div>
 			</span>
 			<span id='outputMode' class='outputMode'>
+				{% if pindes == 'A' %}
 				<div class='form-group'>
 					<label id='trigTime' for='trigTime' class='control-label col-xs-3'>Trigger Time:</label>
 					<div class='col-xs-4'>
@@ -173,6 +174,7 @@
 						<input type='text' class='form-control' id='untrigMilli' name='untrigTime'placeholder='Time to run motor backward (milliseconds)'>
 					</div>
 				</div>
+				{% endif %}
 				<span id='delaytrigger' class='delaytrigger'>
 					<div class='form-group'>
 						<label id='untrigDelay' for='untrigDelay' class='control-label col-xs-3'>Delay:</label>

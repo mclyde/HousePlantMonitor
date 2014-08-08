@@ -125,8 +125,6 @@ def configform(troop, scout, pin):
 			else:
 				print "ERROR"			# TODO: Gracefully exit
 
-			# TODO: Flash warning if pin STATE is disabled
-
 			output_settings = request.form.get('triggerDevice')
 			threshold_values = request.form.get('threshold').split("-")
 			threshold_values = [int(element) for element in threshold_values]
@@ -179,8 +177,6 @@ def configform(troop, scout, pin):
 			while isinstance(pinDTemp, str):
 				pinDTemp = pynoccio.PinCmd(report_scout).report.digital.reply
 			pinDStates = pinDTemp.state
-
-			# TODO: Flash warning if pin STATE is disabled
 
 			pynoccio.PinCmd(report_scout).makeoutput(pin)
 			new_motor = models.Motor(
