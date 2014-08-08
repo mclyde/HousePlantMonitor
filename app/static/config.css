@@ -21,19 +21,47 @@ li {
 	padding: 0px 0px 0px 4px;
 }
 
-#power {
+#power1 {
+	font-size: 18px;
+	margin: 8px;
+	padding-left: 17px;
+	padding-right: 17px;
+}
+
+#power2 {
 	font-size: 18px;
 	margin: 8px;
 }
 
-#mode {
+#mode1 {
 	font-size: 18px;
 	margin: 8px;
+	padding-left: 26px;
+	padding-right: 26px;
+}
+
+#mode2 {
+	font-size: 18px;
+	margin: 8px;
+	padding-left: 17px;
+	padding-right: 17px;
 }
 
 #device {
 	font-size: 24px;
 	margin: 8px;
+}
+
+#confbutton {
+	margin-left: 8px;
+	margin-bottom: 4px;
+	padding-left: 24px;
+	padding-right: 24px;
+}
+
+#status {
+	margin-bottom: 4px;
+	margin-top: -6px;
 }
 
 #configure {
@@ -70,6 +98,39 @@ li {
 	margin-left: 2em;
 }
 
+#dynattrs{
+
+}
+
+#deletebutton {
+	padding-top: 8px;
+	padding-bottom: 8px;
+	font-size: 20px;
+}
+
+#warnmsg {
+	font: bold;
+	margin-top: 4px;
+	margin-left: -24px;
+}
+#trooptitle {
+	font-size: 36px;
+	font-weight: 900;
+}
+
+#scouttitle {
+	font-size: 28px;
+	font-weight: 600;
+	margin-left: 1em;
+}
+
+#scoutreport {
+	font-size: 14px;
+	position:relative;
+	top:-5px;
+	left: 1em;
+}
+
 .dRadio {
 	width: 1.5em;
 	display: inline-block;
@@ -102,6 +163,11 @@ li {
 .form-horizontal {
 	padding-top: 10px;
 	padding-bottom: 10px;
+}
+
+.popover {
+	min-width: 600px;
+	white-space: nowrap
 }
 
 

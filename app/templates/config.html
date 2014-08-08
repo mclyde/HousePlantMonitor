@@ -16,7 +16,7 @@
 {% endblock %}
 
 {% block title %}
-	House Plant Monitor
+	House Plant Monitor - {{ title }}
 {% endblock %}
 
 {% block navbar %}
@@ -27,31 +27,34 @@
 <div class="jumbotron">
 	<div class="container">
     <h1>{{title}}</h1>
+    <hr>
 		{% for troop in troops %}
-			<h2>{{troop.name}}</h2>
+			<h2 id='trooptitle'>{{troop.name}}</h2>
 			{% for scout in troop.scouts %}
 				<div id="scoutpins">
-				<h3>{{scout.name}}</h3>
+				<h3><span id='scouttitle'>{{scout.name}}</span> <button id="scoutreport" class="label btn-primary" name='scoutreport' value="scoutreport" type="submit">Scout Report</button></h3>
+				<br>
 				<ul>
 					{% for key,value in troopPins[troop.name][scout.name].items() %}
-						<li>
+						<li id="{{ value['pin'] }}-{{ scout.name }}-{{ troop.name }}">
 							<span id="pin" name="pin">{{ value['pin'] }} </span>
+							<a href='/configform/{{ troop.id }}/{{ scout.id }}/{{ value["pin"] }}' id="confbutton" class="btn btn-default">Configure</a>
 						{% if value['power'] == 'ACTIVE' %}
-							<span id="power" class="label label-success">{{ value['power'] }} </span>
+							<span id="power1" class="label label-success">{{ value['power'] }} </span>
 							{% if value['mode'] == 'INPUT' %}
-							<span id="mode" class="label label-info">{{ value['mode'] }} </span>
+							<span id="mode1" class="label label-info">{{ value['mode'] }} </span>
 							{% else %}
-							<span id="mode" class="label label-warning">{{ value['mode'] }} </span>
+							<span id="mode2" class="label label-warning">{{ value['mode'] }} </span>
 							{% endif %}
 							<span id="device">{{ value['device'] }}</span>
 						{% else %}
-							<span id="power" class="label label-danger">{{ value['power'] }} </span>
+							<span id="power2" class="label label-danger">{{ value['power'] }} </span>
 						{% endif %}
-							<a href='/configform/{{ troop.id }}/{{ scout.id }}/{{ value["pin"] }}' class="btn btn-default">Configure</a>
 						</li>
 					{% endfor %}
 				</ul>
 				</div>
+				<br>
 			{% endfor %}
 		{% endfor %}
 	</div>

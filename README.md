@@ -5,15 +5,17 @@ A system to monitor houseplant health using a Pinoccio Scout (https://pinocc.io/
 Once the dependencies are installed and the code pulled from Github, simply run the startup script run.py, then navigate to localhost:5000 in the browser of your choice. You will be able to use the configuration page to add the devices that are physically connected to the scouts into your local system and set their behavior.
 
 ##Components
-Python (https://www.python.org/)
+Python (https://docs.python.org/2/license.html)
 
-Flask (http://flask.pocoo.org/)
+Flask (http://flask.pocoo.org/docs/license/)
 
-Pinoccio API (https://docs.pinocc.io/)
+Pinoccio API (https://docs.pinocc.io/ - public API)
 
-Pynoccio (https://github.com/drogge/Pynoccio)
+Pynoccio (https://github.com/drogge/Pynoccio - no license)
 
 JQuery (http://jquery.org/license)
+
+JQueryUI (https://github.com/jquery/jquery-ui/blob/master/LICENSE.txt)
 
 Bootstrap (https://github.com/twbs/bootstrap/blob/master/LICENSE)
 

@@ -19,7 +19,7 @@ var outputs = [
 ];
 var defaults = [
 	{display:'---', value:''}
-]
+];
 
 function getPinClass() {
 		var path = window.location.pathname.toString().split('/');
@@ -83,5 +83,20 @@ function list(arr) {
 	$('.subset').html("");
 	$(arr).each(function(i) {
 		$('.subset').append("<option value=\"" + arr[i].value + "\">" + arr[i].display + "</option>");
+	});
+}
+
+$(function () {
+    $("[data-toggle='popover']").popover({	container:'body',
+    										html:'true',
+    										placement:'bottom',
+    										trigger:'focus',
+    										title: function() {
+												return $('#popover-head').html();
+											},
+											content: function() {
+												return $('#popover-content').html();
+											}
+    									});   
 });
 }

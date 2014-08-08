@@ -19,7 +19,7 @@
 {% endblock %}
 
 {% block title %}
-	House Plant Monitor
+	House Plant Monitor - {{ title }}
 {% endblock %}
 
 {% block navbar %}
@@ -29,13 +29,76 @@
 {% block content %}
 <div class="jumbotron">
 	<div class="container">
-		<h2>{{title}}</h2>
+		<h2>{{title}}:</h2>
+		<h3>{{pinloc['troop']}} - {{pinloc['scout']}} - {{pinloc['pin']}}</h3>
 		<form role='form' class='form-horizontal' id='config-form' method='POST'>
 			<input name=_csrf_token type=hidden value="{{ csrf_token() }}">
 			<div class='form-group'>
 				<label id='nameLabel' for='inputName' class='control-label col-xs-3'>Device Name:</label>
 				<div class='col-xs-5'>
 					<input type='text' class='form-control' id='deviceName' name='deviceName' placeholder='Enter a unique name for this device'>
+				</div>
+				<div class="control-label col-xs-2">
+				{% if currentConfig != {} %}
+					<button type="button" id="status" class="btn btn-default" data-container="body" data-html="true" data-toggle="popover" data-placement="bottom">View Current Settings</button>
+					<div id="popover-content" style="display: none">
+						<label id="dynName" class="control-label col-xs-4">Name </label>
+						<label class="col-xs-1">|</label>
+						<label class="control-label col-xs-4">{{ currentConfig['name'] }}</label>
+						<br><br>
+						<label id="dynType" class="control-label col-xs-4">Device </label>
+						<label class="col-xs-1">|</label>
+						{% if currentConfig['type'] == 'light' %}
+						<label class="control-label col-xs-4">Photometer</label>
+						{% elif currentConfig['type'] == 'soil' %}
+						<label class="control-label col-xs-4">Soil Monitor</label>
+						{% elif currentConfig['type'] == 'temp' %}
+						<label class="control-label col-xs-4">Thermometer</label>
+						{% elif currentConfig['type'] == 'shade' %}
+						<label class="control-label col-xs-4">Motor: Shades</label>
+						{% elif currentConfig['type'] == 'water' %}
+						<label class="control-label col-xs-4">Motor: Water</label>
+						{% else %}
+						<label class="control-label col-xs-4">UNKNOWN</label>
+						{% endif %}
+						{% if currentConfig['this'] == 'device' %}
+							{% if pindes == 'A' %}
+							<br><br>
+							<label id="dynattrs" class="control-label col-xs-4">Upper Threshold </label>
+							<label class="col-xs-1">|</label>
+							<label class="control-label col-xs-4">{{ currentConfig['atriggerupper'] }}</label>
+							<br><br>
+							<label id="dynattrs" class="control-label col-xs-4">Lower Threshold </label>
+							<label class="col-xs-1">|</label>
+							<label class="control-label col-xs-4">{{ currentConfig['atriggerlower'] }}</label>
+							{% else %}
+							<br><br>
+							<label id="dynattrs" class="control-label col-xs-4">Digital Trigger </label>
+							<label class="col-xs-1">|</label>
+							<label class="control-label col-xs-4">{{ currentConfig['dtrigger'] }}</label>
+							{% endif %}
+							<br><br>
+							<label id="dynattrs" class="control-label col-xs-4">Polling Interval </label>
+							<label class="col-xs-1">|</label>
+							<label class="control-label col-xs-4">{{ currentConfig['pollinginterval'] }} minutes</label>
+						{% else %}
+						<br><br>
+						<label id="dynattrs" class="control-label col-xs-4">Trigger Time </label>
+						<label class="col-xs-1">|</label>
+						<label class="control-label col-xs-4">{{ currentConfig['trig_time'] }} ms</label>
+						<br><br>
+						<label id="dynattrs" class="control-label col-xs-4">Untrigger Time </label>
+						<label class="col-xs-1">|</label>
+						<label class="control-label col-xs-4">{{ currentConfig['untrig_time'] }} ms</label>
+						<br><br>
+							{% if currentConfig['type'] == 'water' %}
+							<label id="dynattrs" class="control-label col-xs-4">Delay </label>
+							<label class="col-xs-1">|</label>
+							<label class="control-label col-xs-4">{{ currentConfig['delay'] }} seconds</label>
+							{% endif %}
+						{% endif %}
+					</div>
+				{% endif %}
 				</div>
 			</div>
 			<div class='form-group'>
@@ -98,6 +161,7 @@
 				</div>
 			</span>
 			<span id='outputMode' class='outputMode'>
+				{% if pindes == 'A' %}
 				<div class='form-group'>
 					<label id='trigTime' for='trigTime' class='control-label col-xs-3'>Trigger Time:</label>
 					<div class='col-xs-4'>
@@ -110,6 +174,7 @@
 						<input type='text' class='form-control' id='untrigMilli' name='untrigTime'placeholder='Time to run motor backward (milliseconds)'>
 					</div>
 				</div>
+				{% endif %}
 				<span id='delaytrigger' class='delaytrigger'>
 					<div class='form-group'>
 						<label id='untrigDelay' for='untrigDelay' class='control-label col-xs-3'>Delay:</label>
@@ -119,21 +184,25 @@
 					</div>
 				</span>
 			</span>
-			<span id='pollinginterval' class='pollinginterval'>
-				<div class='form-group'>
-					<label id='pollingInterval' for='pollingInterval' class='control-label col-xs-3'>Polling:</label>
-					<div class='col-xs-4'>
-						<input type='text' class='form-control' id='pollingSec' name='polling' placeholder='Time in seconds between pollings'>
-					</div>
-				</div>
-			</span>		
 			<span id='submitbutton' class='submitbutton'>
 				<div class='form-group'>
 					<div class='col-xs-offset-3 col-xs-8'>
-						<button type='submit' class='btn btn-default'>Submit</button>
+						<button type='submit' name='formbtn' class='btn btn-default' value="save">Submit</button>
 					</div>
 				</div>
 			</span>
+		</form>
+		<hr>
+		<div class="control-label col-xs-3"></div>
+		<div class="control-label col-xs-5"></div>
+		<div class="control-label col-xs-3" id="deletediv">
+		<form role='form' class='form-horizontal' id='delete-form' method='POST'>
+		<input name=_csrf_token type=hidden value="{{ csrf_token() }}">
+		{% if currentConfig != {} %}
+			<button id="deletebutton" class="label btn-danger" name='formbtn' value="delete" type="submit">DELETE DEVICE</button>
+			<div id="warnmsg">Warning: This action cannot be undone!</div>
+		{% endif %}
+		</div>
 		</form>
 	</div>
 </div>
