@@ -126,7 +126,10 @@ def configform(troop, scout, pin):
 
 			output_settings = request.form.get('triggerDevice')
 			threshold_values = request.form.get('threshold').split("-")
-			threshold_values = [int(element) for element in threshold_values]
+			if threshold_values != ['']:
+				threshold_values = [int(element) for element in threshold_values]
+			else:
+				threshold_values =  [250, 750]
 
 			ref_motor = []
 			if (output_settings != 'text' and output_settings != 'email' and output_settings != 'tweet'):
