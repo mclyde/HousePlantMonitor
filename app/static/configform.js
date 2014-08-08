@@ -84,4 +84,4 @@ function list(arr) {
 	$(arr).each(function(i) {
 		$('.subset').append("<option value=\"" + arr[i].value + "\">" + arr[i].display + "</option>");
 });
-
+}

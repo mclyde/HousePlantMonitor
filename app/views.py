@@ -233,19 +233,21 @@ def communications():
     form = CommunicationsForm()
 
     if form.validate_on_submit():
-        g.name = form.name.data
-        g.email = form.email.data
-        g.twitter = form.twitter.data
-        g.phone = form.mobile_phone.number.data
-        g.carrier = form.mobile_phone.carrier.data
-        com = Communication(id = 1, name = g.name, email = g.email, twitter = g.twitter, phone = g.phone, carrier = g.carrier.lower())
-        db.session.merge(com)
+    	new_com = models.Communication(
+    			id = 1,
+				name = form.name.data,
+				email = form.email.data,
+				twitter = form.twitter.data,
+				phone = form.mobile_phone.number.data,
+				carrier = form.mobile_phone.carrier.data.lower()
+			)
+    	db.session.merge(new_com)
         db.session.commit()
         flash('Communications Saved')
         return redirect(url_for('communications'))
     
     com = db.session.query(Communication).first()
-    if com is not None and com != []:
+    if com:
         form.name.data = com.name
         form.email.data = com.email
         form.twitter.data = com.twitter
