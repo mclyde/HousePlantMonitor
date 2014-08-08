@@ -122,7 +122,7 @@ def configform(troop, scout, pin):
 				digital = True
 
 			else:
-				print "ERROR"			# TODO: Gracefully exit
+				print "ERROR: Invalid pin designation"
 
 			output_settings = request.form.get('triggerDevice')
 			threshold_values = request.form.get('threshold').split("-")
@@ -206,7 +206,7 @@ def configform(troop, scout, pin):
 			db.session.add(new_motor)
 
 		else:
-			print "ERROR 2"				# TODO: Gracefully exit
+			print "ERROR: Device not set to input or output"
 
 		if current_device:
 			db.session.delete(current_device)
