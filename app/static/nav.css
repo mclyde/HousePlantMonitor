@@ -1,0 +1,14 @@
+#all-buttons {
+	position: relative;
+	top: 1.1em;
+}
+
+#stopbutton {
+	position: relative;
+	left: 1em;
+}
+
+#scoutbutton {
+	position: relative;
+	left: 2em;
+}
