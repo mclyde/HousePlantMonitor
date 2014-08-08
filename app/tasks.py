@@ -34,7 +34,7 @@ def monitor(device, motors):
 	global threads, exitFlag
 	while True and not exitFlag:
 
-		time.sleep(device.pollinginterval*60)
+		time.sleep(device.pollinginterval)#*60)
 
 		reading = get_reading(device.troop, device.scout, device.pin)
 
@@ -110,21 +110,21 @@ def send_notification(device, reading):
 def motor_controller(motor):
 	if motor.type == "water":
 		print "Triggering motor {0}".format(motor.name)
-		action(motor.troop, motor.scout, motor.pin, "HIGH")
+		#action(motor.troop, motor.scout, motor.pin, "HIGH")
 		time.sleep(motor.trig_time + motor.delay)
 		print "Untriggering motor {0}".format(motor.name)
-		action(motor.troop, motor.scout, motor.pin, "LOW")
+		#action(motor.troop, motor.scout, motor.pin, "LOW")
 		time.sleep(motor.untrig_time)
 
 	else:
 		if motor.state:
 			print "Untriggering motor {0}".format(motor.name)
-			action(motor.troop, motor.scout, motor.pin, "LOW")
+			#action(motor.troop, motor.scout, motor.pin, "LOW")
 			time.sleep(motor.untrig_time + motor.delay)
 			motor.state=0
 		else:
 			print "Triggering motor {0}".format(motor.name)
-			action(motor.troop, motor.scout, motor.pin, "HIGH")
+			#action(motor.troop, motor.scout, motor.pin, "HIGH")
 			time.sleep(motor.trig_time + motor.delay)
 			motor.state=1
 
@@ -152,7 +152,7 @@ def start():
 
 def stop():
 	global threads, exitFlag
-
+	print "stopping"
 	if threads is not []:
 		exitFlag = 1
 		for thread in threads:
