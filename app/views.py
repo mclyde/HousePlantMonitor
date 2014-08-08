@@ -128,7 +128,6 @@ def configform(troop, scout, pin):
 			# TODO: Flash warning if pin STATE is disabled
 
 			output_settings = request.form.get('triggerDevice')
-			pynoccio.PinCmd(report_scout).makeinputup(pin)
 			threshold_values = request.form.get('threshold').split("-")
 			threshold_values = [int(element) for element in threshold_values]
 
@@ -136,6 +135,7 @@ def configform(troop, scout, pin):
 			if (output_settings != 'text' and output_settings != 'email' and output_settings != 'tweet'):
 				ref_motor = [models.Motor.query.get(int(output_settings))]
 
+			pynoccio.PinCmd(report_scout).makeinput(pin)
 			new_device = models.Device(
 				name = request.form.get('deviceName') or 'Unnamed Sensor',
 				troop = troop,
