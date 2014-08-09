@@ -32,21 +32,33 @@ class ActionThread(threading.Thread):
 
 def monitor(device, motors):
 	global threads, exitFlag
-	while True and not exitFlag:
 
-		time.sleep(device.pollinginterval)#*60)
+	while not exitFlag:
+		wait_and_check(device.pollinginterval*60)
 
-		reading = get_reading(device.troop, device.scout, device.pin)
+		if not exitFlag:
+			reading = get_reading(device.troop, device.scout, device.pin)
 
-		if reading < device.atriggerlower:
-			handle_low_reading(device, reading, motors)
-		elif reading > device.atriggerupper:
-			handle_high_reading(device, reading, motors)
-		else:
-			# make sure everything is reset
-			if device.sentnotification is not 0:
-				device.sentnotification=0
+			if reading < device.atriggerlower:
+				handle_low_reading(device, reading, motors)
+			elif reading > device.atriggerupper:
+				handle_high_reading(device, reading, motors)
+			else:
+				# make sure everything is reset
+				if device.sentnotification is not 0:
+					device.sentnotification=0
 
+
+#Constantly check if we should stop monitoring
+def wait_and_check(t):
+	global exitFlag
+
+	n =  t/10
+
+	for _ in range(n):
+		if exitFlag:
+			return
+		time.sleep(10)
 
 
 def handle_low_reading(device, reading, motors):
@@ -66,9 +78,6 @@ def handle_low_reading(device, reading, motors):
 				t = ActionThread(m)
 				t.start()
 				threads.append(t)
-				time.sleep(30)
-	else:
-		print "no motors"
 
 
 def handle_high_reading(device, reading, motors):
@@ -87,7 +96,6 @@ def handle_high_reading(device, reading, motors):
 				t = ActionThread(m)
 				t.start()
 				threads.append(t)
-				time.sleep(30)
 		
 
 
@@ -111,10 +119,10 @@ def motor_controller(motor):
 	if motor.type == "water":
 		print "Triggering motor {0}".format(motor.name)
 		#action(motor.troop, motor.scout, motor.pin, "HIGH")
-		time.sleep(motor.trig_time + motor.delay)
+		wait_and_check(motor.delay)
 		print "Untriggering motor {0}".format(motor.name)
 		#action(motor.troop, motor.scout, motor.pin, "LOW")
-		time.sleep(motor.untrig_time)
+
 
 	else:
 		if motor.state:
@@ -152,7 +160,7 @@ def start():
 
 def stop():
 	global threads, exitFlag
-	print "stopping"
+
 	if threads is not []:
 		exitFlag = 1
 		for thread in threads:
