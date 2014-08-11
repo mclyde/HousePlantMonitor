@@ -11,9 +11,7 @@ from forms import CommunicationsForm, TelephoneForm
 from models import *
 from collections import OrderedDict
 import json
-import emails
-import texts
-import tweets
+import notifications
 import sqlite3
 import tasks
 import status
@@ -293,7 +291,8 @@ def readings():
             islead = pynoccio.ScoutCmd(s).isleadscout
             if not islead.reply:
                 var = pynoccio.PinCmd(s).report.analog
-                #Now you can do what you want with the analog report   
+                #Now you can do what you want with the analog report
+                #notifications.send_email("test", var.reply)
 
     return render_template("readings.html", title = 'Current Readings')
 
@@ -303,8 +302,10 @@ def readings():
 # ======================================================================
 @app.route('/startMonitoring', methods=['GET'])
 def startMonitoring():
-    tasks.setup()
-    return Response("", status=200)
+    response = tasks.setup()
+    if response:
+    	return Response("", status=200)
+    return Response("", status=400)
 
 # ======================================================================
 # Make task stop command available to clientside
